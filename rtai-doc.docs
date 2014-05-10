@@ -1,0 +1,8 @@
+doc/maintainers/compiler.txt
+doc/maintainers/build-system.txt
+doc/maintainers/autoconf.txt
+doc/maintainers/runinfo.txt
+doc/maintainers/doc-framework.txt
+doc/generated/html/api
+README.INSTALL
+debian/README.Debian

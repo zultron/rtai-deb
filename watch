@@ -1,0 +1,3 @@
+version=3
+
+https://www.rtai.org/RTAI/rtai-(.\..*)\.tar\.bz2 debian uupdate

@@ -1,0 +1,19 @@
+This package was debianized by Edelhard Becker <ebecker@software-manufaktur.de> on
+Tue, 22 Jun 2004 22:54:41 +0200
+
+It was downloaded from http://www.rtai.org/
+
+Upstream Authors:
+  Paolo Mantegazza  <mantegazza@aero.polimi.it> et.al. (RTAI modules, examples)
+  Philippe Gerum <rpm AT xenomai DOT org> et.al. (Xenomai VM)
+
+Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006,
+  2007, 2008, Paolo Mantegazza  <mantegazza@aero.polimi.it> et.al.
+Copyright (C) 2001, 2002, 2003, 2004 Philippe Gerum <rpm AT xenomai DOT org> et.al.
+
+  The kernel modules are GPL version 2, the user space libraries (aka LXRT) and
+  the RTAI Programming Guide 1.0 are LGPL version 2.
+  On Debian systems, the complete texts of the GNU General Public License v2
+  and the GNU Lesser General Public License v2 can be found in the file
+  `/usr/share/common-licenses/GPL-2' and `/usr/share/common-licenses/LGPL-2'
+  respectively.

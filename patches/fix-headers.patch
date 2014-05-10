@@ -1,0 +1,109 @@
+Description: Debian's header adjustments to fix compile errors
+ This patch fixes compile errors by adjusting some header files / includes.
+Author: Roland Stigge <stigge@antcom.de>
+
+--- rtai-3.8.1.orig/addons/rtdm/xn.h
++++ rtai-3.8.1/addons/rtdm/xn.h
+@@ -73,7 +73,7 @@
+ 
+ #endif
+ 
+-#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,24)
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(2,6,24)) || (LINUX_VERSION_CODE > KERNEL_VERSION(2,6,31))
+ #define trace_mark(ev, fmt, args...)  do { } while (0)
+ #else
+ #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,32)
+--- rtai-3.8.1.orig/base/include/asm-arm/rtai_atomic.h
++++ rtai-3.8.1/base/include/asm-arm/rtai_atomic.h
+@@ -44,11 +44,11 @@
+ #ifndef _RTAI_ASM_ARM_ATOMIC_H
+ #define _RTAI_ASM_ARM_ATOMIC_H
+ 
+-#include <asm/atomic.h>
+ 
+ #ifdef __KERNEL__
+ 
+ #include <linux/bitops.h>
++#include <asm/atomic.h>
+ #include <asm/system.h>
+ 
+ #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,11)
+@@ -72,11 +72,14 @@
+ 
+ #else /* !__KERNEL__ */
+ 
++typedef struct { volatile int counter; } atomic_t;
+ #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,0)
+ #include <asm/proc/system.h>
+ #else
++#if 0
+ #include <asm/system.h>
+ #endif
++#endif
+ 
+ #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,20)
+ typedef struct { volatile int counter; } atomic_t;
+--- rtai-3.8.1.orig/base/include/asm-arm/arch-pxa/rtai_arch.h
++++ rtai-3.8.1/base/include/asm-arm/arch-pxa/rtai_arch.h
+@@ -44,7 +44,9 @@ Acknowledgements
+ 
+ /* clock frequency of timer that generates timer-interrupt [Hz] */
+ #define RTAI_TIMER_FREQ		CLOCK_TICK_RATE
++#if 0
+ #include <asm/arch/irq.h>
++#endif
+ 
+ #define RTAI_TSC_FREQ		FREQ_SYS_CLK
+ 
+@@ -86,6 +88,20 @@ static inline void arch_umount_rtai( voi
+ }
+ #endif
+ 
++typedef struct adsysinfo {
++
++	int ncpus;                 /* Number of CPUs on board */
++
++	unsigned long long cpufreq;        /* CPU frequency (in Hz) */
++
++	/* Arch-dependent block */
++
++	struct {
++		unsigned tmirq;         /* Timer tick IRQ */
++	} archdep;
++
++} adsysinfo_t;
++
+ extern inline void
+ rtai_archdep_init(void)
+ {
+--- rtai-3.8.1.orig/base/include/asm-x86_64/rtai_lxrt.h
++++ rtai-3.8.1/base/include/asm-x86_64/rtai_lxrt.h
+@@ -32,7 +32,9 @@
+ #endif
+ 
+ #ifndef NR_syscalls
++#ifdef __KERNEL__
+ #include <asm/asm-offsets.h>
++#endif
+ #define NR_syscalls __NR_syscall_max
+ #endif
+ 
+
+--- rtai-3.8.1.orig/base/include/asm-arm/rtai_hal.h
++++ rtai-3.8.1/base/include/asm-arm/rtai_hal.h
+@@ -49,7 +49,6 @@
+ #define _RTAI_ASM_ARM_HAL_H
+ 
+ #include <linux/version.h>
+-#include <linux/autoconf.h>
+ 
+ #define RTAI_SYSCALL_MODE
+ 
+@@ -59,7 +58,6 @@
+ #include <rtai_hal_names.h>
+ #include <asm/rtai_vectors.h>
+ #include <rtai_types.h>	
+-#include <asm/div64.h>
+ 
+ #define RTAI_NR_CPUS	1
+ #define RTAI_NR_IRQS  IPIPE_NR_XIRQS

@@ -1,0 +1,22 @@
+Source: rtai
+Section: devel
+Priority: optional
+Maintainer: Edelhard Becker <edelhard@debian.org>
+Build-Depends: debhelper (>> 4.0.0)
+Standards-Version: 3.8.2
+
+Package: rtai-modules-${kpkg:Kernel-Version}
+Architecture: any
+Provides: rtai-modules
+Conflicts: rtai-modules
+Replaces: rtai-modules
+Description: RTAI modules for Linux (kernel ${kpkg:Kernel-Version})
+ This package contains the set of loadable kernel modules for the RTAI realtime
+ extension, the testsuite, the calibrate tool and other runtime programs
+ depending on the kernel modules.
+ .
+ This package contains the compiled kernel modules for Linux ${kpkg:Kernel-Version}
+ .
+ To use the modules with your kernel, you need to patch the kernel and rebuild
+ the kernel together with the modules. (I.e. you always need both, the patched
+ kernel, _and_ the modules.) See the instructions in the rtai-source package.

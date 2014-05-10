@@ -1,0 +1,259 @@
+rtai (3.9.1-4) unstable; urgency=low
+
+  * Removal of link /usr/include/asm works only on some archs, FTBFS otherwise
+
+ -- Roland Stigge <stigge@antcom.de>  Fri, 10 May 2013 22:23:13 +0200
+
+rtai (3.9.1-3) unstable; urgency=low
+
+  * Remove link /usr/include/asm which is already included in gcc-multilib
+    (Closes: #707671)
+
+ -- Roland Stigge <stigge@antcom.de>  Fri, 10 May 2013 21:23:41 +0200
+
+rtai (3.9.1-2) unstable; urgency=low
+
+  * Enable build on powerpcspe (debian/control, debian/rules)
+
+ -- Roland Stigge <stigge@antcom.de>  Thu, 09 May 2013 18:34:32 +0200
+
+rtai (3.9.1-1) unstable; urgency=low
+
+  * New upstream release
+  * debian/control:
+    - Build-Depends: debhelper (>= 9)
+    - Standards-Version: 3.9.4
+    - Fixed descriptions, thanks to Justin B Rye and Martin Eberhard Schauer
+      (Closes: #697909)
+  * debian/compat: 9
+  * debian/rules:
+    - Use buildflags.mk to automatically support hardening
+    - Add "--enable-comedi-lxrt --enable-comedi-lock" (Closes: #606122)
+      thanks to Yaroslav Halchenko
+
+ -- Roland Stigge <stigge@antcom.de>  Thu, 09 May 2013 16:48:17 +0200
+
+rtai (3.8.1-4) unstable; urgency=low
+
+  * Removed dependency dh-kpatches and make-kpkg patch strategy
+    (Closes: #538193)
+
+ -- Roland Stigge <stigge@antcom.de>  Wed, 04 May 2011 11:43:54 +0200
+
+rtai (3.8.1-3) unstable; urgency=low
+
+  * Support platform arm/armel (Closes: #598915)
+  * debian/control: Standards-Version: 3.9.2
+
+ -- Roland Stigge <stigge@antcom.de>  Sun, 10 Apr 2011 18:24:42 +0200
+
+rtai (3.8.1-2) unstable; urgency=low
+
+  * debian/control:
+    - Standards-Version: 3.9.0
+    - Added binary packages' Architecture: armel armeb
+
+ -- Roland Stigge <stigge@antcom.de>  Sat, 03 Jul 2010 16:08:35 +0200
+
+rtai (3.8.1-1) unstable; urgency=low
+
+  * New upstream release
+  * Moved to new source format 3.0 (quilt)
+
+ -- Roland Stigge <stigge@antcom.de>  Sat, 26 Jun 2010 14:36:01 +0200
+
+rtai (3.8.0-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Roland Stigge <stigge@antcom.de>  Tue, 16 Feb 2010 21:55:09 +0100
+
+rtai (3.8-test1-1) unstable; urgency=low
+
+  * New upstream release
+  * debian/control: Standards-Version: 3.8.4
+  * Added binary package python-rtai (Closes: #538337, #538335)
+  * Added 2.6.32 kernel patch from upstream repository for Debian squeeze
+    (Closes: #513588)
+  * ./configure --disable-leds: Broken RTAI subsystem
+
+ -- Roland Stigge <stigge@antcom.de>  Sun, 14 Feb 2010 20:48:39 +0100
+
+rtai (3.7.1-1) unstable; urgency=low
+
+  * New upstream release
+  * debian/control: Standards-Version: 3.8.2
+
+ -- Roland Stigge <stigge@antcom.de>  Sat, 04 Jul 2009 11:47:08 +0200
+
+rtai (3.6.1-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Roland Stigge <stigge@antcom.de>  Fri, 30 May 2008 10:26:41 +0200
+
+rtai (3.6-4) unstable; urgency=low
+
+  * base/sched/liblxrt/touchall.c: Replaced PAGE_SIZE with getpagesize()
+    (Closes: #479973)
+
+ -- Roland Stigge <stigge@antcom.de>  Fri, 09 May 2008 19:09:06 +0200
+
+rtai (3.6-3) unstable; urgency=low
+
+  * debian/rules: Fixed architecture support for archs != x86
+    (Closes: #473742)
+  * debian/rtai-doc.doc-base.html: Updated Section to Programming
+
+ -- Roland Stigge <stigge@antcom.de>  Sun, 20 Apr 2008 17:10:44 +0200
+
+rtai (3.6-2) unstable; urgency=low
+
+  * debian/control:
+    - New binary package separation:
+      . rtai: Meta package depending on everything
+      . librtai1: Userspace Library
+      . librtai-dev: Header files (Closes: #314980)
+      . rtai-source: Kernel patch and modules source -> kernel package, module
+        package (w/ calibrate and testsuite)
+      . rtai-doc: Documentation
+    - Removed reference to Xenomai, since Xenomai is a separate project now
+
+ -- Roland Stigge <stigge@antcom.de>  Sat, 16 Feb 2008 00:06:09 +0100
+
+rtai (3.6-1) unstable; urgency=low
+
+  [ Roland Stigge ]
+  * New upstream release
+  * No separate ADEOS package necessary (Closes: #415651)
+  * RTAI doesn't support kernels < 2.6.19 (Closes: #379181)
+  * debian/watch: New contents thanks to Raphael Geissert (Closes: #459460)
+  * debian/control:
+    - Homepage: Control field
+    - Standards-Version: 3.7.3
+    - Removed autotools-dev from Build-Depends line
+    - Added Architecture amd64
+    - Removed Architecture mips*
+  * debian/README.Debian: Adjustments to current practice
+  * debian/compat: 6 (Debhelper default compatibility level)
+  * debian/copyright:
+    - Updated download location (rtai.org)
+    - Updated copyright information (complete with year etc.)
+    - Updated license information (GPLv2)
+  * debian/rules: Major rework
+
+  [ Edelhard Becker ]
+  * upload Rolands work, added him to Uploaders: so he doesn't has to wait
+     for me on his future improvements. Thanks, Roland.
+
+ -- Edelhard Becker <edelhard@debian.org>  Wed, 13 Feb 2008 22:19:23 +0100
+
+rtai (3.2-1.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Replace powerpc by ppc in debian/rules (Closes: #374846).
+
+ -- Christoph Berg <myon@debian.org>  Fri, 15 Sep 2006 20:37:17 +0200
+
+rtai (3.2-1) unstable; urgency=low
+
+  * New upstream release
+  * patched debian/rules for the new source directory layout
+  * don't build kernel-patch-adeos from rtai sources anymore but create it as
+    a seperate package from ADEOS' own repository
+  * s/3.0/Magma/ in doc menu
+  * add note about the 2.6.11 issue to README.Debian
+  * add Conflicts/Replaces to the modules debian/control file
+  * cleaned up a couple of lintian warnings for the package generated by
+    compiling rtai-source (#! missing in run scripts, liblxrt.la not
+    executable, description line, strip binaries, compress changelog,
+    add copyright)
+
+ -- Edelhard Becker <edelhard@debian.org>  Fri, 10 Jun 2005 01:02:25 +0200
+
+rtai (3.1.0-4) unstable; urgency=high
+
+  * added fork.o to the export-ojbs line, Closes: #307982: Kernel 2.4.27 does
+    not build with Adeos patch (in fact the bug was in the ADEOS patches for
+    all 2.4 kernels), thanks Ivan and Malte
+  * urgency high due to grave severity of this bug
+
+ -- Edelhard Becker <edelhard@debian.org>  Tue, 10 May 2005 19:08:54 +0200
+
+rtai (3.1.0-3) unstable; urgency=low
+
+  * applied Ivan Raikovs module-argument patch (Closes: #288260)
+  * applied Ivan Raikovs module-load-failure patch (Closes: #288264)
+  * added a note about creating the /dev/rtfN FIFO devices on first install;
+    not done automatically because MAKEDEV doesn't support these entries
+    (Closes: #289605), thanks Ivan for these three
+  * added ${ROOT_CMD} to debian/rules commands for building modules as needed
+    (Closes: #288643), thanks Jan
+
+ -- Edelhard Becker <edelhard@debian.org>  Sun,  6 Mar 2005 14:59:14 +0100
+
+rtai (3.1.0-2) unstable; urgency=low
+
+  * added fork.o to 2.4.2[467] patchfiles also
+  * added debhelper to dependencies of rtai-source
+  * removed omitted directories rtai-compat and rtai-lab from GNUmakefile.in
+    (thanks Wolfgang Koebler)
+  * patched correct path into calibration and testsuite "run" scripts
+    (thanks Wolfgang Koebler)
+
+ -- Edelhard Becker <edelhard@debian.org>  Sun,  6 Mar 2005 02:33:47 +0100
+
+rtai (3.1.0-1) unstable; urgency=low
+
+  * New upstream release 3.1 final.
+  * added http://download.gna.org/rtai/stable/v3/ to debian/copyright
+  * Added fork.o to export-objs of kernel/Makefile patchfile snippet (as
+    suggested); the rejection of arch/i386/kernel/Makefile can't be
+    reproduced, the patch works fine with my fresh download of
+    kernel-source-2.4.25.
+    Closes: #273075: kernel-patch-adeos: Patch fails on kernel 2.4.25
+  * Added user_moddir option to the rtai-load script, thanks Ivan Raikov for
+    the patch; added a small paragraph to runinfo.txt for documentation.
+    Closes: #273076: rtai-source: Additional module search directory
+  * added debian/watch (which currently overrides the version to 3.1)
+
+ -- Edelhard Becker <edelhard@debian.org>  Sun, 26 Sep 2004 15:29:30 +0200
+
+rtai (3.1-test5-1) unstable; urgency=low
+
+  * New upstream release
+  * cleaned up building on supported architectures
+    + create links mipsel->mips and powerpc->ppc in debian/rules
+    + changed dh_installkpatchhes flag from -a to -s, Closes: #270508:
+      rtai_3.1-test4-2(ia64/unstable): FTBFS: more porting work needed?
+
+ -- Edelhard Becker <edelhard@debian.org>  Thu,  9 Sep 2004 17:14:19 +0200
+
+rtai (3.1-test4-2) unstable; urgency=medium
+
+  * Urgency due to fix for FTBFS. Added autotools-dev to the Build-Depends as
+    suggested by Matt Kraai (Closes: #267709).
+
+ -- Edelhard Becker <edelhard@debian.org>  Wed, 25 Aug 2004 15:04:13 +0200
+
+rtai (3.1-test4-1) unstable; urgency=low
+
+  * New upstream release
+  * repackaged from CVS
+  * debian/control: set Architecture for rtai-source, kernel-patch-adeos and
+    rtai to "i386 powerpc mips mipsel arm" (Closes: #259262, #262400, well,
+    sort-of. Build-deps are fixed too, see below)
+  * temporarily moved references to RTAI-RefGuide.pdf out of rtai-doc (missing
+    in this upstream release)
+  * debian/control: with pbuilders help, cleaned up Build-deps
+  * debian/rules: added stuff to clean target
+  * added README.INSTALL and README.Debian to rtai-source and -doc
+
+ -- Edelhard Becker <edelhard@debian.org>  Wed,  4 Aug 2004 13:58:05 +0200
+
+rtai (3.1-test3-1) unstable; urgency=low
+
+  * Initial Release (Closes: #197901, #197902, #197903, #197904).
+
+ -- Edelhard Becker <edelhard@debian.org>  Tue, 22 Jun 2004 19:52:28 +0200
+

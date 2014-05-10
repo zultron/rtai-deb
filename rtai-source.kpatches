@@ -1,0 +1,104 @@
+Patch-name: RTAI
+Patch-id: rtai
+Path-strip-level: 1
+
+
+Patch-file: base/arch/x86/patches/hal-linux-2.6.29.5-x86-2.4-03.patch
+Architecture: i386
+Kernel-version: 2.6.29.5
+
+Patch-file: base/arch/x86/patches/hal-linux-2.6.30.5-x86-2.4-05.patch
+Architecture: i386
+Kernel-version: 2.6.30.5
+
+Patch-file: base/arch/x86/patches/hal-linux-2.6.24-x86-2.0-07.patch
+Architecture: i386
+Kernel-version: 2.6.24
+
+Patch-file: base/arch/x86/patches/hal-linux-2.6.28.9-x86-2.2-07.patch
+Architecture: i386
+Kernel-version: 2.6.28.9
+
+Patch-file: base/arch/x86/patches/hal-linux-2.6.32.11-x86-2.6-03.patch
+Architecture: i386
+Kernel-version: 2.6.32
+
+Patch-file: base/arch/x86/patches/hal-linux-2.6.31.8-x86-2.4-09.patch
+Architecture: i386
+Kernel-version: 2.6.31.1
+
+Patch-file: base/arch/x86/patches/hal-linux-2.6.25-x86-2.0-09.patch
+Architecture: i386
+Kernel-version: 2.6.25
+
+Patch-file: base/arch/x86/patches/hal-linux-2.6.29.5-x86-2.4-03.patch
+Architecture: amd64
+Kernel-version: 2.6.29.5
+
+Patch-file: base/arch/x86/patches/hal-linux-2.6.30.5-x86-2.4-05.patch
+Architecture: amd64
+Kernel-version: 2.6.30
+
+Patch-file: base/arch/x86/patches/hal-linux-2.6.24-x86-2.0-07.patch
+Architecture: amd64
+Kernel-version: 2.6.24
+
+Patch-file: base/arch/x86/patches/hal-linux-2.6.28.9-x86-2.2-07.patch
+Architecture: amd64
+Kernel-version: 2.6.28.9
+
+Patch-file: base/arch/x86/patches/hal-linux-2.6.32.11-x86-2.6-03.patch
+Architecture: amd64
+Kernel-version: 2.6.32.2
+
+Patch-file: base/arch/x86/patches/hal-linux-2.6.31.8-x86-2.4-09.patch
+Architecture: amd64
+Kernel-version: 2.6.31.1
+
+Patch-file: base/arch/x86/patches/hal-linux-2.6.25-x86-2.0-09.patch
+Architecture: amd64
+Kernel-version: 2.6.25
+
+Patch-file: base/arch/x86_64/patches/hal-linux-2.6.19-x86_64-1.0-06.patch
+Architecture: amd64
+Kernel-version: 2.6.19
+
+Patch-file: base/arch/x86_64/patches/hal-linux-2.6.23-x86_64-1.4-03.patch
+Architecture: amd64
+Kernel-version: 2.6.23
+
+Patch-file: base/arch/x86_64/patches/hal-linux-2.6.20-x86_64-1.0-08.patch
+Architecture: amd64
+Kernel-version: 2.6.20
+
+Patch-file: base/arch/x86_64/patches/hal-linux-2.6.22-x86_64-1.2-05.patch
+Architecture: amd64
+Kernel-version: 2.6.22
+
+Patch-file: base/arch/ppc/patches/hal-linux-2.6.20-powerpc-1.8-06.patch
+Architecture: powerpc
+Kernel-version: 2.6.20
+
+Patch-file: base/arch/ppc/patches/hal-linux-2.6.14-ppc-1.5-01.patch
+Architecture: powerpc
+Kernel-version: 2.6.14
+
+Patch-file: base/arch/ppc/patches/hal-linux-2.6.29.4-powerpc-2.6-02.patch
+Architecture: powerpc
+Kernel-version: 2.6.29.4
+
+Patch-file: base/arch/i386/patches/hal-linux-2.6.22-i386-1.10-12.patch
+Architecture: i386
+Kernel-version: 2.6.22
+
+Patch-file: base/arch/i386/patches/hal-linux-2.6.23-i386-1.12-03.patch
+Architecture: i386
+Kernel-version: 2.6.23
+
+Patch-file: base/arch/i386/patches/hal-linux-2.6.20.21-i386-1.12-03.patch
+Architecture: i386
+Kernel-version: 2.6.20.21
+
+Patch-file: base/arch/i386/patches/hal-linux-2.4.36-i386-1.3-04.patch
+Architecture: i386
+Kernel-version: 2.6.36

@@ -1,0 +1,108 @@
+Source: rtai
+Section: devel
+Priority: extra
+Maintainer: Edelhard Becker <edelhard@debian.org>
+Uploaders: Roland Stigge <stigge@antcom.de>
+Build-Depends: debhelper (>= 9), bzip2, python-support, autotools-dev, dpkg-dev (>= 1.16.1~), libcomedi-dev, autoconf
+XS-Python-Version: >= 2.1
+Homepage: http://www.rtai.org/
+Standards-Version: 3.9.4
+
+Package: rtai
+Architecture: i386 amd64 powerpc powerpcspe arm armel armeb
+Depends: rtai-doc (>= ${source:Version}), librtai1 (>= ${source:Version}), librtai-dev (>= ${source:Version}), rtai-source (>= ${source:Version}), python-rtai, ${misc:Depends}
+Description: Real Time Application Interface
+ RTAI is a realtime extension with a broad variety of services which
+ make realtime programmers' lifes easier. Some of them are
+ .
+  choose between FIFO and RR scheduling policies on a per task basis.
+  extended POSIX APIs and message queues, in kernel and user space
+  semaphores can be typed as: counting, binary and resource
+  a mailbox implementation
+  LXRT for hard real time in user space
+ .
+ This is a metapackage that depends on the latest versions of
+ the individual RTAI packages.
+
+Package: librtai1
+Section: libs
+Architecture: i386 amd64 powerpc powerpcspe arm armel armeb
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Real Time Application Interface (module source)
+ RTAI is a realtime extension with a broad variety of services which
+ make realtime programmers' lifes easier. Some of them are
+ .
+  choose between FIFO and RR scheduling policies on a per task basis.
+  extended POSIX APIs and message queues, in kernel and user space
+  semaphores can be typed as: counting, binary and resource
+  a mailbox implementation
+  LXRT for hard real time in user space
+ .
+ This package contains the shared library.
+
+Package: librtai-dev
+Section: libdevel
+Architecture: i386 amd64 powerpc powerpcspe arm armel armeb
+Depends: librtai1 (= ${binary:Version}), ${misc:Depends}
+Description: Real Time Application Interface (module source)
+ RTAI is a realtime extension with a broad variety of services which
+ make realtime programmers' lifes easier. Some of them are
+ .
+  choose between FIFO and RR scheduling policies on a per task basis.
+  extended POSIX APIs and message queues, in kernel and user space
+  semaphores can be typed as: counting, binary and resource
+  a mailbox implementation
+  LXRT for hard real time in user space
+ .
+ This package contains the development files (header files, rtai-config and
+ static library).
+
+Package: rtai-source
+Section: devel
+Architecture: i386 amd64 powerpc powerpcspe arm armel armeb
+Depends: make, debhelper (>= 4.0.0), python-rtai, ${misc:Depends}
+Description: Real Time Application Interface (module source)
+ RTAI is a realtime extension with a broad variety of services which
+ make realtime programmers' lifes easier. Some of them are
+ .
+  choose between FIFO and RR scheduling policies on a per task basis.
+  extended POSIX APIs and message queues, in kernel and user space
+  semaphores can be typed as: counting, binary and resource
+  a mailbox implementation
+  LXRT for hard real time in user space
+ .
+ This package contains the patches for modifying the kernel, and sources for
+ building the kernel modules, module dependent runtime tools and the testsuite.
+
+Package: rtai-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends}
+Description: Real Time Application Interface (documentation)
+ RTAI is a realtime extension with a broad variety of services which
+ make realtime programmers' lifes easier. Some of them are
+ .
+  choose between FIFO and RR scheduling policies on a per task basis.
+  extended POSIX APIs and message queues, in kernel and user space
+  semaphores can be typed as: counting, binary and resource
+  a mailbox implementation
+  LXRT for hard real time in user space
+ .
+ This package contains the documentation.
+
+Package: python-rtai
+Section: python
+Architecture: all
+Depends: ${python:Depends}, ${misc:Depends}
+XB-Python-Version: ${python:Versions}
+Description: Real Time Application Interface (documentation)
+ RTAI is a realtime extension with a broad variety of services which
+ make realtime programmers' lifes easier. Some of them are
+ .
+  choose between FIFO and RR scheduling policies on a per task basis.
+  extended POSIX APIs and message queues, in kernel and user space
+  semaphores can be typed as: counting, binary and resource
+  a mailbox implementation
+  LXRT for hard real time in user space
+ .
+ This package contains the Python bindings.

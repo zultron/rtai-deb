@@ -1,0 +1,54 @@
+RTAI for Debian
+---------------
+
+Please see the documents in the rtai-doc package or RTAIs website
+(http://www.rtai.org/) for a description of the rtai software.
+
+The Debian RTAI source package currently provides six packages,
+
+ 1) rtai-source: This package provides the source for the kernel modules,
+    and the patches for the kernel. _Both_ must be used, i.e. the kernel must
+    be patched and recompiled and for a working RTAI, the kernel modules must
+    be built (and loaded at some point). The modules package also contains some
+    programs like the calibrate tool and the testsuite both of which contain
+    and use additional kernel modules.
+ 2) librtai1: The userspace shared library (liblxrt.so)
+ 3) librtai-dev: The development files like headers, static library and the
+    rtai-config tool for your build environment
+ 4) rtai-doc: The API documentation
+ 5) rtai: The metapackage depending on all the other packages above, to ease a
+    complete installation
+ 6) python-rtai: The Python binding for RTAI
+
+The rtai-source package can be used in the following way:
+
+      $ cd /usr/src
+      $ tar xjf rtai-source.tar.bz2
+      $ cd linux-source-<KVER>
+      $ make-kpkg clean
+      $ gunzip -c /usr/src/kernel-patches/diffs/rtai/hal-linux-2.6.14-ppc-1.5-01.patch.gz | patch -p1
+   (replace the patch filename with the appropriate patch file for your architecture)
+      $ fakeroot make-kpkg --initrd kernel_image modules_image
+   which should give you (at least) the two packages
+      $ ls /usr/src/*.deb
+      /usr/src/rtai-modules-<KVER>_<RTAIVER>+<REVISION>_<ARCH>.deb
+      /usr/src/linux-image-<KVER>_<REVISION>_<ARCH>.deb
+   that can be installed with dpkg(8) as usual. If you install the modules for
+   the first time and don't use devfs, don't forget to create the FIFO devices
+   /dev/rtfN (i.e. use something like
+      $ for n in `seq 0 9` ; do f=/dev/rtf$n ; mknod -m 666 $f c 150 $n ; done
+   as root, of course.
+
+ - Changing to the /usr/src/modules/rtai/ directory and building as
+   the README.INSTALL file instructs. This will build and install a
+   module specific to the system you are building on and is not under
+   control of the packaging system.
+
+The contents of rtai-lab/ is included in the Debian rtai source
+package but excluded from the default build.
+
+
+(This file was initially created by Edelhard Becker <ebecker@software-manufaktur.de>)
+
+ -- Roland Stigge <stigge@antcom.de>, Thu, 14 Feb 2008 21:11:09 +0100
+
