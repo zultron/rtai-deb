@@ -1,3 +1,20 @@
+rtai (4.0.0-1) unstable; urgency=low
+
+  * Updates for RTAI-4.0.0 and ShabbyX git repo
+    - acinclude.m4 file moved
+    - configure.in -> configure.ac
+    - makefile -> GNUmakefile
+    - Arch is now 'x86', not 'amd64' and 'i.86'
+    - Add Build-Depends: autoconf, automake, libtool
+    - Deal with missing depcomp/config.sub/etc.
+    - Remove non-module directories for module package
+      - *FIXME* These directories need to be packaged elsewhere
+  * Bug fixes
+    - Fix ./configure command line typo
+    - Fix race condition with build-arch-stamp
+
+ -- John Morris <john@zultron.com>  Mon, 12 May 2014 01:49:00 -0500
+
 rtai (3.9.1-4) unstable; urgency=low
 
   * Removal of link /usr/include/asm works only on some archs, FTBFS otherwise

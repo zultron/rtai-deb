@@ -1,0 +1,5 @@
+This is a copy of the Debian RTAI packaging modified to build the
+ShabbyX RTAI repo.
+
+It contains updates needed for RTAI 4.0, bug fixes to the original
+packaging, and workarounds to problems in the ShabbyX repo.

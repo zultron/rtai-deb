@@ -3,7 +3,8 @@ Section: devel
 Priority: extra
 Maintainer: Edelhard Becker <edelhard@debian.org>
 Uploaders: Roland Stigge <stigge@antcom.de>
-Build-Depends: debhelper (>= 9), bzip2, python-support, autotools-dev, dpkg-dev (>= 1.16.1~), libcomedi-dev, autoconf
+Build-Depends: debhelper (>= 9), bzip2, python-support, autotools-dev,
+ dpkg-dev (>= 1.16.1~), libcomedi-dev, autoconf, automake, libtool
 XS-Python-Version: >= 2.1
 Homepage: http://www.rtai.org/
 Standards-Version: 3.9.4

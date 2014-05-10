@@ -1,5 +1,5 @@
---- rtai-3.9.1.orig/base/config/autoconf/acinclude.m4
-+++ rtai-3.9.1/base/config/autoconf/acinclude.m4
+--- rtai-3.9.1.orig/m4/acinclude.m4
++++ rtai-3.9.1/m4/acinclude.m4
 @@ -223,10 +223,10 @@ AC_CACHE_VAL(ac_cv_comedi,[
  
      # First check to see if --with-comedi was specified.

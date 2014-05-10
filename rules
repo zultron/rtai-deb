@@ -20,7 +20,7 @@ include /usr/share/dpkg/buildflags.mk
 DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
 DEB_BUILD_ARCH      = $(shell dpkg-architecture -qDEB_BUILD_ARCH | sed -e s/powerpcspe/ppc/ -e s/powerpc/ppc/)
-HOST_CPU            = $(shell dpkg-architecture -qDEB_HOST_ARCH | sed -e s/powerpcspe/ppc/ -e s/powerpc/ppc/ -e s/amd64/x86_64/ -e s/armel/arm/)
+HOST_CPU            = $(shell dpkg-architecture -qDEB_HOST_ARCH | sed -e s/powerpcspe/ppc/ -e s/powerpc/ppc/ -e s/amd64/x86/ -e s/i.86/x86/ -e s/armel/arm/)
 
 ifeq ($(HOST_CPU),arm)
 CFLAGS += -march=armv6
@@ -137,16 +137,25 @@ CONFIG_TARGET_IF=gui
 endif
 
 kdist_config-stamp:
+	mkdir -p bin
+	cp -f base/config/autoconf/config.sub bin/config.sub
+	cp -f base/config/autoconf/install-sh bin/install-sh
+	cp -f base/config/autoconf/config.guess bin/config.guess
+	cp -f base/config/autoconf/depcomp bin/depcomp
+	cp -f base/config/autoconf/ltmain.sh bin/ltmain.sh
+	cp -f base/config/autoconf/missing bin/missing
 	sed 's:/usr/realtime:$(RTAI_PREFIX):' base/arch/$(HOST_CPU)/defconfig.in \
 		| sed 's:/usr/src/linux:$(KSRC):' \
 		> $(CURDIR)/base/arch/$(HOST_CPU)/defconfig
 ifeq ($(CONFIG_TARGET_IF),cli)
-	CFLAGS="$(CFLAGS)" ./configure --host=$(DEB_HOST_GNU_TYPE) \
-	       --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr \
-	       --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info \
-	       --with-linux-dir=$(KSRC) --includedir=\$${prefix}/include/rtai \
-	       --with-module-dir=/lib/modules/$(KVERS)/rtai --disable-rtailab \
-	       --disable-leds
+	CFLAGS="$(CFLAGS)" \
+	    ./configure --host=$(DEB_HOST_GNU_TYPE) \
+	    --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr \
+	    --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info \
+	    --with-linux-dir=$(KSRC) \
+	    --includedir=\$${prefix}/include/rtai \
+	    --with-module-dir=/lib/modules/$(KVERS)/rtai \
+	    --disable-rtailab --disable-leds
 endif
 ifeq ($(CONFIG_TARGET_IF),gui)
 	$(MAKE) -f makefile $(CONFIG_TARGET)
@@ -187,11 +196,14 @@ ifneq "$(wildcard /usr/share/misc/config.sub)" ""
 	cp -f /usr/share/misc/config.sub config.sub
 	cp -f /usr/share/misc/config.sub base/config/autoconf/config.sub
 endif
+	mkdir -p bin
+	cp -f base/config/autoconf/config.sub bin/config.sub
+	cp -f base/config/autoconf/install-sh bin/install-sh
 ifneq "$(wildcard /usr/share/misc/config.guess)" ""
 	cp -f /usr/share/misc/config.guess config.guess
 	cp -f /usr/share/misc/config.guess base/config/autoconf/config.guess
 endif
-	autoconf -f
+	autoreconf -v --install
 	sed -e "s,^CONFIG_X86=,$(CONFIG_OPTION)=," debian/linux/.config.x86 > debian/linux/.config
 ifeq ($(CONFIG_OPTION),CONFIG_ARM)
 	echo "CONFIG_ARCH_PXA=y" >> debian/linux/.config
@@ -201,11 +213,11 @@ endif
 	       --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info \
 	       --with-linux-dir=$(CURDIR)/debian/linux --disable-leds \
 	       --includedir=\$${prefix}/include/rtai --disable-rtailab \
-	       --enable-comedi-lxrt --enable--comedi-lock
+	       --enable-comedi-lxrt --enable-comedi-lock
 	touch configure-stamp
 
 build-arch:  config.status build-arch-stamp
-build-arch-stamp:
+build-arch-stamp:  config.status
 	dh_testdir
 	cd base/sched/liblxrt && $(MAKE) CFLAGS="$(CFLAGS)"
 	cd base/scripts && $(MAKE)
@@ -241,6 +253,13 @@ binary-modules: kdist_config-stamp
 	rm -f debian/$(pmodules)/usr/bin/rtai-config
 	rm -rf debian/$(pmodules)/usr/lib
 	rm -rf debian/$(pmodules)/usr/include
+	rm -rf debian/$(pmodules)/usr/rtai-py
+	# these *belong* in other packages, but aren't?
+	rm -rf debian/$(pmodules)/usr/calibration
+	rm -rf debian/$(pmodules)/usr/bin
+	rm -rf debian/$(pmodules)/usr/testsuite
+	rm -rf debian/$(pmodules)/usr/share/rtai
+	rm -rf debian/$(pmodules)/usr/share/doc
 
 	${ROOT_CMD} dh_installdebconf
 	${ROOT_CMD} dh_installchangelogs
@@ -296,6 +315,9 @@ install: build
 	cd rtai-py && $(MAKE) install pythondir=/usr/share/pyshared DESTDIR=$(CURDIR)/debian/python-rtai
 	chmod a-x $(CURDIR)/debian/python-rtai/usr/share/pyshared/*.py
 	dh_install -plibrtai-dev --sourcedir=. base/scripts/rtai-config usr/bin
+	cat base/ipc/shm/rtai_shm.udev base/ipc/shm/rtai_shm.udev > \
+	    debian/librtai-dev.udev
+	dh_installudev -plibrtai-dev
 
 	# Create the directories to install the source into
 	dh_installdirs -p$(psource)  usr/src/modules/$(package)
@@ -308,10 +330,10 @@ install: build
 		config.guess \
 		config.sub \
 		configure \
-		configure.in \
+		configure.ac \
 		GNUmakefile.am \
 		GNUmakefile.in \
-		makefile \
+		GNUmakefile \
 		README.INSTALL \
 		rtai_config.h.in \
 		addons \
