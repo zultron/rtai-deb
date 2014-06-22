@@ -1,3 +1,10 @@
+rtai (4.0.0-2) unstable; urgency=low
+
+  * Re-add missing autoconf files
+    - https://github.com/ShabbyX/RTAI/issues/15
+
+ -- John Morris <john@zultron.com>  Sun, 22 Jun 2014 22:24:18 -0500
+
 rtai (4.0.0-1) unstable; urgency=low
 
   * Updates for RTAI-4.0.0 and ShabbyX git repo
