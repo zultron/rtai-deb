@@ -1,0 +1,13 @@
+# ignore build artifacts
+/files
+/*.debhelper.log
+/*.debhelper
+/*.substvars
+/*.udev
+/linux/.config
+/librtai-dev/
+/librtai1/
+/python-rtai/
+/rtai-doc/
+/rtai-source/
+/rtai/
