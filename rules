@@ -288,7 +288,8 @@ clean:
 	rm -f debian/linux/.config
 
 	# Add here commands to clean up after the build process.
-	[ ! -f GNUmakefile ] || $(MAKE) distclean
+	# This screws up all the time
+	[ ! -f GNUmakefile ] || $(MAKE) distclean || true
 	# Leftovers due to upstream bug XXX
 	rm -f base/arch/*/calibration/Makefile
 	rm -f base/arch/*/hal/Makefile
