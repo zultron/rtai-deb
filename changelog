@@ -1,3 +1,12 @@
+rtai (4.0.0-3) unstable; urgency=low
+
+  * Patch:  Enable multiple RTAI versions on a single system
+    - https://github.com/ShabbyX/RTAI/issues/16
+  * Convert package from python-support to dh_python2
+  * Enable fpu support
+
+ -- John Morris <john@zultron.com>  Tue, 24 Jun 2014 14:36:56 -0500
+
 rtai (4.0.0-2) unstable; urgency=low
 
   * Re-add missing autoconf files
