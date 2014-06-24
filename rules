@@ -378,7 +378,7 @@ binary-indep: build install
 	dh_installdocs -i
 	dh_installexamples -i
 	dh_install -i
-	dh_pysupport -i
+	dh_python2 -i
 	dh_installman -i
 	dh_lintian -i
 	dh_link -i
@@ -398,7 +398,7 @@ binary-arch: build install
 	dh_installexamples -s
 	dh_install -s
 	dh_installmenu -s
-	dh_pysupport -s
+	dh_python2 -s
 	dh_lintian -s
 	dh_installcron -s
 	dh_installinfo -s
