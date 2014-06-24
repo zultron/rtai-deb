@@ -1,0 +1,22 @@
+Force 16-byte stack alignment
+
+Allow SSE instructions in kernel modules
+
+Seen on Debian jessie and other places:
+
+[...]/testsuite/kern/latency/latency-module.c:1:0: error: 
+    -mpreferred-stack-boundary=3 is not between 4 and 12
+
+http://mail.rtai.org/pipermail/rtai/2013-December/026198.html
+
+--- a/configure.ac	2014-06-24 17:45:34.985001679 +0000
++++ b/configure.ac	2014-06-24 17:38:37.000000000 +0000
+@@ -1748,7 +1748,7 @@
+         RTAI_REAL_USER_CFLAGS="$RTAI_REAL_USER_CFLAGS -Wall -Wstrict-prototypes -pipe"
+ 	dnl What kind of an x86_64 CPU doesn't have an FPU? Honestly.
+         RTAI_FP_CFLAGS="$RTAI_FP_CFLAGS -ffast-math -mhard-float -Wno-undef"
+-	RTAI_TARGET_ARCH_OPTS="$RTAI_TARGET_ARCH_OPTS -msse -msse2"
++	RTAI_TARGET_ARCH_OPTS="$RTAI_TARGET_ARCH_OPTS -msse -msse2 -mpreferred-stack-boundary=4"
+         ;;
+    esac
+    ;;

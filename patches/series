@@ -1,3 +1,4 @@
 fix-include-comedilib-h.patch
 re-add-autoconf-files.patch
 rtai-config-multi-kernel.patch
+rtai-preferred-stack-boundary.patch
