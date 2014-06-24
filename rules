@@ -155,7 +155,7 @@ ifeq ($(CONFIG_TARGET_IF),cli)
 	    --with-linux-dir=$(KSRC) \
 	    --includedir=\$${prefix}/include/rtai \
 	    --with-module-dir=/lib/modules/$(KVERS)/rtai \
-	    --disable-rtailab --disable-leds
+	    --disable-rtailab --disable-leds --enable-fpu
 endif
 ifeq ($(CONFIG_TARGET_IF),gui)
 	$(MAKE) -f makefile $(CONFIG_TARGET)
@@ -213,7 +213,7 @@ endif
 	       --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info \
 	       --with-linux-dir=$(CURDIR)/debian/linux --disable-leds \
 	       --includedir=\$${prefix}/include/rtai --disable-rtailab \
-	       --enable-comedi-lxrt --enable-comedi-lock
+	       --enable-comedi-lxrt --enable-comedi-lock --enable-fpu
 	touch configure-stamp
 
 build-arch:  config.status build-arch-stamp
