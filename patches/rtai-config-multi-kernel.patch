@@ -459,7 +459,7 @@ diff -ruN a/base/scripts/rtai-config.in b/base/scripts/rtai-config.in
 diff -ruN a/configure.ac b/configure.ac
 --- a/configure.ac	2014-05-12 06:48:57.000000000 -0500
 +++ b/configure.ac	2014-06-23 14:54:59.811676267 -0500
-@@ -265,6 +265,26 @@
+@@ -265,6 +265,27 @@
  fi
  
  dnl
@@ -473,7 +473,8 @@ diff -ruN a/configure.ac b/configure.ac
 +else
 +    VERSION_FILE=$RTAI_LINUX_DIR/include/linux/version.h
 +fi
-+RTAI_LINUX_UTSNAME=`$CC -E -dM ${VERSION_FILE} | grep UTS | cut -d '"' -f 2`
++RTAI_LINUX_UTSNAME=`$CC -E -dM ${VERSION_FILE} 2>/dev/null | \
++    grep UTS | cut -d '"' -f 2`
 +
 +if test -z "$RTAI_LINUX_UTSNAME"; then
 +    AC_MSG_RESULT([not found])
