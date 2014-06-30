@@ -1,0 +1,24 @@
+commit e4c6cf5f57c5cae7b73cd4e9f8c596f546621c5b
+Author: John Morris <john@zultron.com>
+Date:   Mon Jun 30 17:13:21 2014 -0500
+
+    x86 default .config:  CONFIG_RTAI_CPUS="8"
+    
+    Reported by Mick/Schooner/@ArcEye
+    
+    Kernel crashes if number of host CPUs is greater than
+    `CONFIG_RTAI_CPUS`
+
+diff --git a/base/arch/x86/defconfig b/base/arch/x86/defconfig
+index 049d173..6f327d9 100644
+--- a/base/arch/x86/defconfig
++++ b/base/arch/x86/defconfig
+@@ -26,7 +26,7 @@ CONFIG_RTAI_LXRT_NO_INLINE=y
+ # Machine (x86)
+ #
+ CONFIG_RTAI_FPU_SUPPORT=y
+-CONFIG_RTAI_CPUS="2"
++CONFIG_RTAI_CPUS="8"
+ # CONFIG_RTAI_DIAG_TSC_SYNC is not set
+ 
+ #
