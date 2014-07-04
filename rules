@@ -213,7 +213,8 @@ endif
 	       --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info \
 	       --with-linux-dir=$(CURDIR)/debian/linux --disable-leds \
 	       --includedir=\$${prefix}/include/rtai --disable-rtailab \
-	       --enable-comedi-lxrt --enable-comedi-lock --enable-fpu
+	       --enable-comedi-lxrt --enable-comedi-lock --enable-fpu \
+	       --enable-rtdm
 	touch configure-stamp
 
 build-arch:  config.status build-arch-stamp
