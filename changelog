@@ -1,3 +1,10 @@
+rtai (4.0.0-4) unstable; urgency=low
+
+  * Install /etc/grub.d/09_rtai
+    - Generate extra RTAI kernel entries with isolcpus= set
+
+ -- John Morris <john@zultron.com>  Thu, 10 Jul 2014 16:07:41 -0500
+
 rtai (4.0.0-3) unstable; urgency=low
 
   * Patch:  Enable multiple RTAI versions on a single system

@@ -370,6 +370,10 @@ install: build
 	# this one is also included in gcc-multilib (on some archs), see #707671
 	-rm -f $(CURDIR)/debian/librtai-dev/usr/include/asm
 
+#	# Install the RTAI isolcpus= grub.d entry
+	dh_install -plibrtai1 --sourcedir=debian/extras \
+	    --autodest etc/grub.d/09_rtai
+
 # Build architecture-independent files here.
 # Pass -i to all debhelper commands in this target to reduce clutter.
 binary-indep: build install
