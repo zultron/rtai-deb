@@ -20,7 +20,7 @@ diff -ruN a/base/scripts/GNUmakefile.am b/base/scripts/GNUmakefile.am
 diff -ruN a/base/scripts/rtai-config b/base/scripts/rtai-config
 --- a/base/scripts/rtai-config	1969-12-31 18:00:00.000000000 -0600
 +++ b/base/scripts/rtai-config	2014-06-23 22:20:11.586947316 -0500
-@@ -0,0 +1,156 @@
+@@ -0,0 +1,160 @@
 +#!/bin/bash
 +
 +usage() {
@@ -147,6 +147,10 @@ diff -ruN a/base/scripts/rtai-config b/base/scripts/rtai-config
 +
 +# Usage if no command line args at all
 +test -n "$1" || usage
++
++# Allow an 'RTAI_KVER' environment variable to specify the kernel
++# version
++SELECT_ARG=$RTAI_KVER
 +
 +# Process command-line args; double-dash '--foo' arguments get passed
 +# on to kernel rtai-config
