@@ -12,3 +12,8 @@
 /rtai-source/
 /rtai/
 /stamps/[a-z]*
+
+# OSC
+/.osc/
+/rtai*.tar.gz
+/rtai_*.dsc
