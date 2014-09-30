@@ -214,7 +214,7 @@ endif
 	       --with-linux-dir=$(CURDIR)/debian/linux --disable-leds \
 	       --includedir=\$${prefix}/include/rtai --disable-rtailab \
 	       --enable-comedi-lxrt --enable-comedi-lock --enable-fpu \
-	       --enable-rtdm
+	       --enable-rtdm --enable-doc --enable-dbx
 	touch configure-stamp
 
 build-arch:  config.status build-arch-stamp
@@ -222,6 +222,7 @@ build-arch-stamp:  config.status
 	dh_testdir
 	cd base/sched/liblxrt && $(MAKE) CFLAGS="$(CFLAGS)"
 	cd base/scripts && $(MAKE)
+	$(MAKE) -C doc/doxygen
 	touch build-arch-stamp
 
 # the binary-modules target prepares the $(pmodules) package.

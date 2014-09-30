@@ -9,6 +9,8 @@ rtai (4.0.1.61a8177-1) unstable; urgency=low
   * Remove old, inapplicable patches from package:
     - fix-headers.patch
     - fix-autotools-files.patch
+  * Fix documentation build
+    - Generated docs removed from upstream repo, so build from source
 
  -- John Morris <john@zultron.com>  Tue, 30 Sep 2014 11:46:44 -0500
 
