@@ -1,3 +1,17 @@
+rtai (4.0.1.61a8177-1) unstable; urgency=low
+
+  * Update to latest ShabbyX master
+  * Remove rtai-config-multi-kernel.patch
+    - Accepted and improved upstream
+  * Remove other patches accepted upstream:
+    - rtai-preferred-stack-boundary.patch
+    - set-default-rtai_cpus.patch
+  * Remove old, inapplicable patches from package:
+    - fix-headers.patch
+    - fix-autotools-files.patch
+
+ -- John Morris <john@zultron.com>  Tue, 30 Sep 2014 11:46:44 -0500
+
 rtai (4.0.0-5) unstable; urgency=low
 
   * Enable specifying RTAI kernel version through environment variable
