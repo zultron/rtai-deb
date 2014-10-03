@@ -12,6 +12,9 @@
 # Uncomment this to turn on verbose mode. 
 #export DH_VERBOSE=1
 
+# dpkg stamps directory
+STAMPS_DIR = debian/stamps
+
 DPKG_EXPORT_BUILDFLAGS = 1
 include /usr/share/dpkg/buildflags.mk
 
@@ -121,8 +124,8 @@ kdist: kdist_clean kdist_config kdist_image
 # The kdist_configure target is called by make-kpkg modules_config. It
 # should configure the module so it is ready for compilation (mostly
 # useful for calling configure)
-kdist_config: kdist_config-stamp
-kdist_configure: kdist_config-stamp
+kdist_config: $(STAMPS_DIR)/kdist_config
+kdist_configure: $(STAMPS_DIR)/kdist_config
 
 # try to support all of RTAIs configuring interfaces
 CONFIG_TARGET_IF=cli
@@ -136,7 +139,7 @@ ifeq ($(CONFIG_TARGET),xconfig)
 CONFIG_TARGET_IF=gui
 endif
 
-kdist_config-stamp:
+$(STAMPS_DIR)/kdist_config:
 	mkdir -p bin
 	cp -f base/config/autoconf/config.sub bin/config.sub
 	cp -f base/config/autoconf/install-sh bin/install-sh
@@ -160,7 +163,7 @@ endif
 ifeq ($(CONFIG_TARGET_IF),gui)
 	$(MAKE) -f makefile $(CONFIG_TARGET)
 endif
-	touch kdist_config-stamp
+	touch $@
 
 # the kdist_image target is called by make-kpkg modules_image. It is
 # responsible for compiling the module and creating the package. It
@@ -189,8 +192,8 @@ else
 CONFIG_OPTION=CONFIG_X86
 endif
 
-config.status: configure-stamp
-configure-stamp:
+config.status: $(STAMPS_DIR)/configure
+$(STAMPS_DIR)/configure:
 	dh_testdir
 ifneq "$(wildcard /usr/share/misc/config.sub)" ""
 	cp -f /usr/share/misc/config.sub config.sub
@@ -215,19 +218,19 @@ endif
 	       --includedir=\$${prefix}/include/rtai --disable-rtailab \
 	       --enable-comedi-lxrt --enable-comedi-lock --enable-fpu \
 	       --enable-rtdm --enable-doc --enable-dbx
-	touch configure-stamp
+	touch $@
 
-build-arch:  config.status build-arch-stamp
-build-arch-stamp:  config.status
+build-arch:  config.status $(STAMPS_DIR)/build-arch
+$(STAMPS_DIR)/build-arch:  config.status
 	dh_testdir
 	cd base/sched/liblxrt && $(MAKE) CFLAGS="$(CFLAGS)"
 	cd base/scripts && $(MAKE)
 	$(MAKE) -C doc/doxygen
-	touch build-arch-stamp
+	touch $@
 
 # the binary-modules target prepares the $(pmodules) package.
 # It is called by make-kpkg and *not* during a normal build
-binary-modules: kdist_config-stamp
+binary-modules: $(STAMPS_DIR)/kdist_config
 	export DH_OPTIONS='-p$(pmodules)'
 
 	# Is this needed for setting up a Depends?
@@ -274,19 +277,20 @@ binary-modules: kdist_config-stamp
 	${ROOT_CMD} dh_md5sums
 	${ROOT_CMD} dh_builddeb --destdir=$(KPKG_DEST_DIR)
 
-build-indep: config.status  build-indep-stamp
-build-indep-stamp:
+build-indep: config.status  $(STAMPS_DIR)/build-indep
+$(STAMPS_DIR)/build-indep:
 	dh_testdir
-	touch build-indep-stamp
+	touch $@
 
 build: build-arch build-indep
 
 clean:
 	dh_testdir
 	dh_testroot
-	rm -f build-arch-stamp build-indep-stamp kdist_config-stamp \
+	rm -f $(STAMPS_DIR)/build-arch \
+		$(STAMPS_DIR)/build-indep $(STAMPS_DIR)/kdist_config \
 		debian/rtai-source.tar.bz2 \
-		base/arch/powerpc configure-stamp
+		base/arch/powerpc $(STAMPS_DIR)/configure
 	rm -f debian/linux/.config
 
 	# Add here commands to clean up after the build process.
@@ -296,9 +300,10 @@ clean:
 	rm -f base/arch/*/calibration/Makefile
 	rm -f base/arch/*/hal/Makefile
 
-	rm -f config.log config.status .rtai_config .rtai_config.old rtai_config.h \
+	rm -f config.log config.status .rtai_config .rtai_config.old \
+		rtai_config.h \
 		libtool GNUmakefile stamp-h1 .cfok .cfchanged \
-		build-arch-stamp build-indep-stamp
+		$(STAMPS_DIR)/build-arch $(STAMPS_DIR)/build-indep
 	rm -f config.sub config.guess base/config/autoconf/config.sub \
 		base/config/autoconf/config.guess configure
 	dh_clean
