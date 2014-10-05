@@ -13,6 +13,8 @@ rtai (4.0.1.61a8177-1) unstable; urgency=low
     - Generated docs removed from upstream repo, so build from source
   * Move package build stamps to `debian/stamps`
     - Keep them out of the source tree and out of git's way
+  * Fix `clean` target
+    - Don't fail and don't mess with files in version control
 
  -- John Morris <john@zultron.com>  Tue, 30 Sep 2014 11:46:44 -0500
 

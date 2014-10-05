@@ -195,19 +195,9 @@ endif
 config.status: $(STAMPS_DIR)/configure
 $(STAMPS_DIR)/configure:
 	dh_testdir
-ifneq "$(wildcard /usr/share/misc/config.sub)" ""
-	cp -f /usr/share/misc/config.sub config.sub
-	cp -f /usr/share/misc/config.sub base/config/autoconf/config.sub
-endif
-	mkdir -p bin
-	cp -f base/config/autoconf/config.sub bin/config.sub
-	cp -f base/config/autoconf/install-sh bin/install-sh
-ifneq "$(wildcard /usr/share/misc/config.guess)" ""
-	cp -f /usr/share/misc/config.guess config.guess
-	cp -f /usr/share/misc/config.guess base/config/autoconf/config.guess
-endif
 	autoreconf -v --install
-	sed -e "s,^CONFIG_X86=,$(CONFIG_OPTION)=," debian/linux/.config.x86 > debian/linux/.config
+	sed -e "s,^CONFIG_X86=,$(CONFIG_OPTION)=," debian/linux/.config.x86 > \
+		debian/linux/.config
 ifeq ($(CONFIG_OPTION),CONFIG_ARM)
 	echo "CONFIG_ARCH_PXA=y" >> debian/linux/.config
 endif
@@ -284,18 +274,15 @@ $(STAMPS_DIR)/build-indep:
 
 build: build-arch build-indep
 
-clean:
+clean: config.status
 	dh_testdir
 	dh_testroot
-	rm -f $(STAMPS_DIR)/build-arch \
-		$(STAMPS_DIR)/build-indep $(STAMPS_DIR)/kdist_config \
+	rm -f $(STAMPS_DIR)/* \
 		debian/rtai-source.tar.bz2 \
-		base/arch/powerpc $(STAMPS_DIR)/configure
-	rm -f debian/linux/.config
+		debian/linux/.config
 
 	# Add here commands to clean up after the build process.
-	# This screws up all the time
-	[ ! -f GNUmakefile ] || $(MAKE) distclean || true
+	$(MAKE) distclean
 	# Leftovers due to upstream bug XXX
 	rm -f base/arch/*/calibration/Makefile
 	rm -f base/arch/*/hal/Makefile
@@ -304,8 +291,7 @@ clean:
 		rtai_config.h \
 		libtool GNUmakefile stamp-h1 .cfok .cfchanged \
 		$(STAMPS_DIR)/build-arch $(STAMPS_DIR)/build-indep
-	rm -f config.sub config.guess base/config/autoconf/config.sub \
-		base/config/autoconf/config.guess configure
+	rm -f config.sub config.guess configure
 	dh_clean
 
 install: DH_OPTIONS=
@@ -335,8 +321,8 @@ install: build
 	cp -a  \
 		aclocal.m4 \
 		ChangeLog \
-		config.guess \
-		config.sub \
+		bin/config.guess \
+		bin/config.sub \
 		configure \
 		configure.ac \
 		GNUmakefile.am \

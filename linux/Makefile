@@ -275,7 +275,7 @@ export quiet Q KBUILD_VERBOSE
 MAKEFLAGS += --include-dir=$(srctree)
 
 # We need some generic definitions.
-include $(srctree)/scripts/Kbuild.include
+-include $(srctree)/scripts/Kbuild.include
 
 # Make variables (CC, etc...)
 
@@ -489,7 +489,7 @@ else
 CFLAGS		+= -O2
 endif
 
-include $(srctree)/arch/$(ARCH)/Makefile
+-include $(srctree)/arch/$(ARCH)/Makefile
 
 ifdef CONFIG_IPIPE_TRACE_MCOUNT
 CFLAGS          += -pg
@@ -1063,11 +1063,8 @@ clean: rm-dirs  := $(CLEAN_DIRS)
 clean: rm-files := $(CLEAN_FILES)
 clean-dirs      := $(addprefix _clean_,$(srctree) $(vmlinux-alldirs))
 
-PHONY += $(clean-dirs) clean archclean
-$(clean-dirs):
-	$(Q)$(MAKE) $(clean)=$(patsubst _clean_%,%,$@)
-
-clean: archclean $(clean-dirs)
+PHONY += clean archclean
+clean: archclean
 	$(call cmd,rmdirs)
 	$(call cmd,rmfiles)
 	@find . $(RCS_FIND_IGNORE) \
@@ -1080,13 +1077,9 @@ clean: archclean $(clean-dirs)
 #
 mrproper: rm-dirs  := $(wildcard $(MRPROPER_DIRS))
 mrproper: rm-files := $(wildcard $(MRPROPER_FILES))
-mrproper-dirs      := $(addprefix _mrproper_,Documentation/DocBook scripts)
 
-PHONY += $(mrproper-dirs) mrproper archmrproper
-$(mrproper-dirs):
-	$(Q)$(MAKE) $(clean)=$(patsubst _mrproper_%,%,$@)
-
-mrproper: clean archmrproper $(mrproper-dirs)
+PHONY += mrproper archmrproper
+mrproper: clean archmrproper
 	$(call cmd,rmdirs)
 	$(call cmd,rmfiles)
 
@@ -1252,12 +1245,8 @@ _emodinst_post: _emodinst_
 
 clean-dirs := $(addprefix _clean_,$(KBUILD_EXTMOD))
 
-PHONY += $(clean-dirs) clean
-$(clean-dirs):
-	$(Q)$(MAKE) $(clean)=$(patsubst _clean_%,%,$@)
-
 clean:	rm-dirs := $(MODVERDIR)
-clean: $(clean-dirs)
+clean:
 	$(call cmd,rmdirs)
 	@find $(KBUILD_EXTMOD) $(RCS_FIND_IGNORE) \
 		\( -name '*.[oas]' -o -name '*.ko' -o -name '.*.cmd' \
@@ -1501,11 +1490,6 @@ ifneq ($(cmd_files),)
   $(cmd_files): ;	# Do not try to update included dependency files
   include $(cmd_files)
 endif
-
-# Shorthand for $(Q)$(MAKE) -f scripts/Makefile.clean obj=dir
-# Usage:
-# $(Q)$(MAKE) $(clean)=dir
-clean := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.clean obj
 
 endif	# skip-makefile
 
