@@ -6,6 +6,7 @@ rtai (4.0.1.61a8177-1) unstable; urgency=low
   * Remove other patches accepted upstream:
     - rtai-preferred-stack-boundary.patch
     - set-default-rtai_cpus.patch
+    - fix-include-comedilib-h.patch
   * Remove old, inapplicable patches from package:
     - fix-headers.patch
     - fix-autotools-files.patch
