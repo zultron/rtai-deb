@@ -1,0 +1,29 @@
+From 0537e4e7d7ba11a1e5909075a6e2a2ea3403e31a Mon Sep 17 00:00:00 2001
+From: John Morris <john@zultron.com>
+Date: Mon, 6 Oct 2014 13:55:19 -0500
+Subject: [PATCH 1/2] base/sched/Kbuild:  initial commit:  satisfy kbuild 'make
+ clean'
+
+/usr/src/linux-headers-`uname -r`/scripts/Makefile.clean wants to
+include either 'Kbuild' or 'Makefile' in the 'base/sched' directory.
+
+Signed-off-by: John Morris <john@zultron.com>
+---
+ base/sched/Kbuild | 4 ++++
+ 1 file changed, 4 insertions(+)
+ create mode 100644 base/sched/Kbuild
+
+diff --git a/base/sched/Kbuild b/base/sched/Kbuild
+new file mode 100644
+index 0000000..055342f
+--- /dev/null
++++ b/base/sched/Kbuild
+@@ -0,0 +1,4 @@
++# Stub file to make kbuild 'make clean' happy                -*-makefile-*-
++#
++# /usr/src/linux-headers-`uname -r`/scripts/Makefile.clean wants to
++# include either 'Kbuild' or 'Makefile' in this directory.
+-- 
+1.9.1
+
+

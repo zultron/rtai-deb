@@ -1,4 +1,4 @@
-rtai (4.0.1.61a8177-1) unstable; urgency=low
+rtai (4.0.1.7a86a10-1) unstable; urgency=low
 
   * Update to latest ShabbyX master
   * Remove rtai-config-multi-kernel.patch
@@ -16,6 +16,9 @@ rtai (4.0.1.61a8177-1) unstable; urgency=low
     - Keep them out of the source tree and out of git's way
   * Fix `clean` target
     - Don't fail and don't mess with files in version control
+  * New patches for ShabbyX master:
+    - Fix for `make distclean`
+    - Fix for ignored `./configure --includedir`
 
  -- John Morris <john@zultron.com>  Tue, 30 Sep 2014 11:46:44 -0500
 
