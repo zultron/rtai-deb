@@ -196,7 +196,7 @@ config.status: $(STAMPS_DIR)/configure
 $(STAMPS_DIR)/configure:
 	dh_testdir
 	autoreconf -v --install
-	sed -e "s,^CONFIG_X86=,$(CONFIG_OPTION)=," debian/linux/.config.x86 > \
+	sed -e "s,^CONFIG_X86_X=,$(CONFIG_OPTION)=," debian/linux/.config.x86 > \
 		debian/linux/.config
 ifeq ($(CONFIG_OPTION),CONFIG_ARM)
 	echo "CONFIG_ARCH_PXA=y" >> debian/linux/.config
