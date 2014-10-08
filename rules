@@ -189,7 +189,7 @@ CONFIG_OPTION=CONFIG_ARM
 else ifeq ($(shell echo $(DEB_HOST_GNU_TYPE) | cut -d- -f1),x86_64)
 CONFIG_OPTION=CONFIG_X86_64
 else
-CONFIG_OPTION=CONFIG_X86
+CONFIG_OPTION=CONFIG_X86_32
 endif
 
 config.status: $(STAMPS_DIR)/configure
