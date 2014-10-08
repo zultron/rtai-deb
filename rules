@@ -282,7 +282,7 @@ clean: config.status
 		debian/linux/.config
 
 	# Add here commands to clean up after the build process.
-	$(MAKE) distclean
+	$(MAKE) distclean || true # 'make distclean' is all messed up
 	# Leftovers due to upstream bug XXX
 	rm -f base/arch/*/calibration/Makefile
 	rm -f base/arch/*/hal/Makefile
