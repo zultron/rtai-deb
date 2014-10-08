@@ -96,6 +96,7 @@ Package: python-rtai
 Section: python
 Architecture: all
 Depends: ${python:Depends}, ${misc:Depends}
+Provides: ${python:Provides}
 Description: Real Time Application Interface (documentation)
  RTAI is a realtime extension with a broad variety of services which
  make realtime programmers' lifes easier. Some of them are
