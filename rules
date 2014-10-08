@@ -340,18 +340,11 @@ install: build
 	mv debian/$(psource)/usr/src/modules/$(package)/base/arch/$(HOST_CPU)/defconfig \
 		debian/$(psource)/usr/src/modules/$(package)/base/arch/$(HOST_CPU)/defconfig.in
 #	# Copy the needed debian/ pieces to the proper location
-#	cp debian/*-modules.* \
-#		debian/$(psource)/usr/src/modules/$(package)/debian
 	cp debian/control.modules.in \
-		debian/$(psource)/usr/src/modules/$(package)/debian/control.in
-	cp debian/rules \
-		debian/$(psource)/usr/src/modules/$(package)/debian
-	cp debian/compat \
-		debian/$(psource)/usr/src/modules/$(package)/debian
-	cp debian/changelog \
-		debian/$(psource)/usr/src/modules/$(package)/debian
-	cp debian/copyright \
-		debian/$(psource)/usr/src/modules/$(package)/debian
+	    debian/$(psource)/usr/src/modules/$(package)/debian/control.in
+	cp debian/rules debian/compat debian/changelog debian/copyright \
+	    debian/$(psource)/usr/src/modules/$(package)/debian
+	mkdir debian/$(psource)/usr/src/modules/$(package)/debian/stamps
 
 	tar cjf debian/rtai-source/usr/src/rtai-source.tar.bz2 --directory debian/$(psource)/usr/src modules
 	rm -rf debian/$(psource)/usr/src/modules
