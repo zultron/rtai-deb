@@ -1,4 +1,11 @@
-rtai (4.0.1.7a86a10-1) unstable; urgency=low
+rtai (4.0.2-1) unstable; urgency=low
+
+  * Fix incorrect arch selection:  'x86', not 'x86_64'
+  * Fix minor warning in python-rtai pkg build
+
+ -- John Morris <john@zultron.com>  Wed, 08 Oct 2014 03:51:23 -0500
+
+rtai (4.0.1-1) unstable; urgency=low
 
   * Update to latest ShabbyX master
   * Remove rtai-config-multi-kernel.patch
