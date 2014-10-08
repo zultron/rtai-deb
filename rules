@@ -379,7 +379,7 @@ binary-indep: build install
 	dh_installman -i
 	dh_lintian -i
 	dh_link -i
-	dh_compress -i -X.pdf $(CURDIR)/debian/rtai-source/usr/src/kernel-patches/diffs/rtai/*
+	dh_compress -i -X.pdf 
 	dh_fixperms -i
 	dh_installdeb -i
 	dh_shlibdeps -i
@@ -402,7 +402,8 @@ binary-arch: build install
 	dh_installchangelogs ChangeLog -s
 	dh_strip -s
 	dh_link -s
-	dh_compress -s
+	dh_compress -s \
+	    $(CURDIR)/debian/rtai-source/usr/src/kernel-patches/diffs/rtai/*
 	dh_fixperms -s
 	dh_makeshlibs -s
 	dh_installdeb -s
