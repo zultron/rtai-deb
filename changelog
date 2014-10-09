@@ -2,6 +2,7 @@ rtai (4.0.2-1) unstable; urgency=low
 
   * Fix incorrect arch selection:  'x86', not 'x86_64'
   * Fix minor warning in python-rtai pkg build
+  * Another `make distclean` fix upstream
 
  -- John Morris <john@zultron.com>  Wed, 08 Oct 2014 03:51:23 -0500
 
