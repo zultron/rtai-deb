@@ -277,21 +277,12 @@ build: build-arch build-indep
 clean: config.status
 	dh_testdir
 	dh_testroot
+
 	rm -f $(STAMPS_DIR)/* \
 		debian/rtai-source.tar.bz2 \
 		debian/linux/.config
 
-	# Add here commands to clean up after the build process.
 	$(MAKE) distclean
-	# Leftovers due to upstream bug XXX
-	rm -f base/arch/*/calibration/Makefile
-	rm -f base/arch/*/hal/Makefile
-
-	rm -f config.log config.status .rtai_config .rtai_config.old \
-		rtai_config.h \
-		libtool GNUmakefile stamp-h1 .cfok .cfchanged \
-		$(STAMPS_DIR)/build-arch $(STAMPS_DIR)/build-indep
-	rm -f config.sub config.guess configure
 	dh_clean
 
 install: DH_OPTIONS=
