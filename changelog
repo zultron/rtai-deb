@@ -1,8 +1,19 @@
 rtai (4.0.2-1) unstable; urgency=low
 
   * Fix incorrect arch selection:  'x86', not 'x86_64'
+  * Unify `./configure` for run-time and kpkg builds
+    - Fix `$(KSRC)` default
+    - Conditionally build dummy RTAI `.config` in run-time pkg builds
+    - Set `RTAI_INSTALLDIR` and `RTAI_LINUXDIR` config from commandline
+  * Update files going into `rtai-source` tarball
+  * Remove a bunch of cruft
+  * Readability fixes
+    - Wrap lines for readability
+      - before I go blind
+    - Organize `install` target by package
+    - Move kernel build targets together at end of file
   * Fix minor warning in python-rtai pkg build
-  * Another `make distclean` fix upstream
+  * More `make distclean` fixes upstream
 
  -- John Morris <john@zultron.com>  Wed, 08 Oct 2014 03:51:23 -0500
 

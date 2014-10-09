@@ -22,8 +22,11 @@ include /usr/share/dpkg/buildflags.mk
 # from having to guess our platform (since we know it already)
 DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
-DEB_BUILD_ARCH      = $(shell dpkg-architecture -qDEB_BUILD_ARCH | sed -e s/powerpcspe/ppc/ -e s/powerpc/ppc/)
-HOST_CPU            = $(shell dpkg-architecture -qDEB_HOST_ARCH | sed -e s/powerpcspe/ppc/ -e s/powerpc/ppc/ -e s/amd64/x86/ -e s/i.86/x86/ -e s/armel/arm/)
+DEB_BUILD_ARCH      = $(shell dpkg-architecture -qDEB_BUILD_ARCH | \
+			sed -e s/powerpcspe/ppc/ -e s/powerpc/ppc/)
+HOST_CPU            = $(shell dpkg-architecture -qDEB_HOST_ARCH | \
+			sed -e s/powerpcspe/ppc/ -e s/powerpc/ppc/ \
+			-e s/amd64/x86/ -e s/i.86/x86/ -e s/armel/arm/)
 
 ifeq ($(HOST_CPU),arm)
 CFLAGS += -march=armv6
@@ -38,15 +41,29 @@ RTAI_PREFIX=/usr/lib/realtime
 
 # Name of package
 package		= rtai
-# KSRC is the location of the kernel source. This is the default value,
-# when make-kpkg is used it will supply to real value
-KSRC		= /usr/src/linux
+# KSRC is the location of the kernel source. This default value points
+# to a dummy linux tree in the package directory, sufficient to run
+# './configure'.  When make-kpkg is used it will supply to real value
+ifndef KSRC
+KSRC		= $(CURDIR)/debian/linux
+DUMMY_KCONFIG	= debian/linux/.config
+CONFIGURE_ARGS	= --enable-doc --enable-dbx
+else
+# Comedi build is broken in magma
+#CONFIGURE_ARGS	= --enable-comedi-lxrt --enable-comedi-lock
+CONFIGURE_ARGS	= 
+endif
 # KDREV is the package-revision, as given to make-kpkg by the user.
 # Just put a simply default value in here which we use when we test
 # the packagebuilding without make-kpkg
 ifeq ($(strip $(KDREV)),)
 KDREV		= "test1.0"
 endif
+
+# These override '/usr/realtime' and '/usr/src/linux', respectively,
+# in the rtai .config
+CFLAGS += -DCONFIG_RTAI_INSTALLDIR="$(RTAI_PREFIX)" \
+	-DCONFIG_RTAI_LINUXDIR="$(KSRC)"
 
 ## Now to determine the kernel version, normally supplied by make-kpkg
 ifeq ($(strip $(KVERS)),)
@@ -117,15 +134,7 @@ KDIST_DEST_DIR		= ..
 pmodules = $(package)-modules-$(non_epoch_version)
 psource = $(package)-source
 
-# Prepares the package for distribution.  Intended for the kernel
-# maintainer.
-kdist: kdist_clean kdist_config kdist_image
-
-# The kdist_configure target is called by make-kpkg modules_config. It
-# should configure the module so it is ready for compilation (mostly
-# useful for calling configure)
-kdist_config: $(STAMPS_DIR)/kdist_config
-kdist_configure: $(STAMPS_DIR)/kdist_config
+pmoddir = debian/$(psource)/usr/src/modules/$(package)
 
 # try to support all of RTAIs configuring interfaces
 CONFIG_TARGET_IF=cli
@@ -139,27 +148,192 @@ ifeq ($(CONFIG_TARGET),xconfig)
 CONFIG_TARGET_IF=gui
 endif
 
-$(STAMPS_DIR)/kdist_config:
-	mkdir -p bin
-	cp -f base/config/autoconf/config.sub bin/config.sub
-	cp -f base/config/autoconf/install-sh bin/install-sh
-	cp -f base/config/autoconf/config.guess bin/config.guess
-	cp -f base/config/autoconf/depcomp bin/depcomp
-	cp -f base/config/autoconf/ltmain.sh bin/ltmain.sh
-	cp -f base/config/autoconf/missing bin/missing
-	sed 's:/usr/realtime:$(RTAI_PREFIX):' base/arch/$(HOST_CPU)/defconfig.in \
-		| sed 's:/usr/src/linux:$(KSRC):' \
-		> $(CURDIR)/base/arch/$(HOST_CPU)/defconfig
-ifeq ($(CONFIG_TARGET_IF),cli)
-	CFLAGS="$(CFLAGS)" \
-	    ./configure --host=$(DEB_HOST_GNU_TYPE) \
-	    --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr \
-	    --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info \
-	    --with-linux-dir=$(KSRC) \
-	    --includedir=\$${prefix}/include/rtai \
-	    --with-module-dir=/lib/modules/$(KVERS)/rtai \
-	    --disable-rtailab --disable-leds --enable-fpu
+### end  KERNEL SETUP
+
+ifeq ($(shell echo $(DEB_HOST_GNU_TYPE) | cut -d- -f1),powerpc)
+CONFIG_OPTION=CONFIG_PPC
+else ifeq ($(shell echo $(DEB_HOST_GNU_TYPE) | cut -d- -f1),arm)
+CONFIG_OPTION=CONFIG_ARM
+else ifeq ($(shell echo $(DEB_HOST_GNU_TYPE) | cut -d- -f1),x86_64)
+CONFIG_OPTION=CONFIG_X86_64
+else
+CONFIG_OPTION=CONFIG_X86_32
 endif
+
+configure:
+	dh_testdir
+	autoreconf -v --install
+
+debian/linux/.config:
+	dh_testdir
+#	# put CONFIG_X86_(32|64|ARM|PPC) into dummy .config
+	sed -e "s,^CONFIG_X86_X=,$(CONFIG_OPTION)=," \
+	    debian/linux/.config.x86 > debian/linux/.config
+	test "$(CONFIG_OPTION)" != CONFIG_ARM || \
+	    echo "CONFIG_ARCH_PXA=y" >> debian/linux/.config
+
+config.status: configure $(DUMMY_KCONFIG)
+	CFLAGS="$(CFLAGS)" \
+	    ./configure \
+	    --host=$(DEB_HOST_GNU_TYPE) \
+	    --build=$(DEB_BUILD_GNU_TYPE) \
+	    --prefix=/usr \
+	    --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info \
+	    --includedir=\$${prefix}/include/rtai \
+	    --with-linux-dir=$(KSRC) \
+	    --with-module-dir=/lib/modules/$(KVERS)/rtai \
+	    --disable-leds  --disable-rtailab \
+	    --enable-fpu --enable-rtdm \
+	    $(CONFIGURE_ARGS)
+	touch $@
+
+build-arch: $(STAMPS_DIR)/build-arch
+$(STAMPS_DIR)/build-arch:  config.status
+	dh_testdir
+	$(MAKE) -C base/sched/liblxrt CFLAGS="$(CFLAGS)"
+	$(MAKE) -C base/scripts
+	$(MAKE) -C doc/doxygen
+	touch $@
+
+build-indep: config.status  $(STAMPS_DIR)/build-indep
+$(STAMPS_DIR)/build-indep:
+	dh_testdir
+	touch $@
+
+build: build-arch build-indep
+
+clean: config.status
+	dh_testdir
+	dh_testroot
+
+	rm -f $(STAMPS_DIR)/* \
+		debian/rtai-source.tar.bz2 \
+		debian/linux/.config
+
+	$(MAKE) distclean
+	dh_clean
+
+install: DH_OPTIONS=
+install: build
+	dh_testdir
+	dh_testroot
+	dh_prep
+	dh_installdirs
+
+#	# librtai-dev
+	$(MAKE) -C base/sched/liblxrt install \
+	    DESTDIR=$(CURDIR)/debian/librtai-dev
+	dh_install -plibrtai-dev --sourcedir=. base/scripts/rtai-config usr/bin
+	cat base/ipc/shm/rtai_shm.udev base/ipc/shm/rtai_shm.udev > \
+	    debian/librtai-dev.udev
+	dh_installudev -plibrtai-dev
+
+#	# librtai1
+	mkdir -p $(CURDIR)/debian/librtai1/usr/lib
+	mv $(CURDIR)/debian/librtai-dev/usr/lib/liblxrt.so.* \
+	    $(CURDIR)/debian/librtai1/usr/lib
+	$(MAKE) -C base/include install DESTDIR=$(CURDIR)/debian/librtai-dev
+#	# Install the RTAI isolcpus= grub.d entry
+	dh_install -plibrtai1 --sourcedir=debian/extras \
+	    --autodest etc/grub.d/09_rtai
+
+#	# python-rtai
+	$(MAKE) -C rtai-py install pythondir=/usr/share/pyshared \
+	    DESTDIR=$(CURDIR)/debian/python-rtai
+	chmod a-x $(CURDIR)/debian/python-rtai/usr/share/pyshared/*.py
+
+#	# rtai-source
+#	#
+#	# Prepare the usr/src/modules/$(package) directory, which will
+#	# be packed into the rtai-source tarball
+#	#
+#	# Create the directories to install the source into
+	mkdir -p $(pmoddir)/debian
+#	#
+#	# Copy only the driver source to the proper location
+	cp -a  \
+		ChangeLog README.INSTALL \
+		aclocal.m4 configure configure.ac bin \
+		GNUmakefile.am GNUmakefile.in GNUmakefile \
+		rtai_config.h.in \
+		addons base testsuite rtai-lab rtai-py \
+		$(pmoddir)
+#	# Copy the needed debian/ pieces to the proper location
+	cp debian/control.modules.in \
+	    $(pmoddir)/debian/control.in
+	cp debian/rules debian/compat debian/changelog debian/copyright \
+	    $(pmoddir)/debian
+	mkdir $(pmoddir)/debian/stamps
+#	# Build the rtai-source tarball
+	tar cjf debian/rtai-source/usr/src/rtai-source.tar.bz2 \
+	    --directory debian/$(psource)/usr/src modules
+	rm -rf debian/$(psource)/usr/src/modules
+#	#
+#	# Patch collection
+	find base/arch -name 'hal-linux-*.patch' | \
+	    xargs -I XXX cp XXX \
+		debian/rtai-source/usr/src/kernel-patches/diffs/rtai/
+
+# Build architecture-independent files here.
+# Pass -i to all debhelper commands in this target to reduce clutter.
+binary-indep: build install
+	dh_testdir -i
+	dh_testroot -i
+	dh_installchangelogs ChangeLog -i
+	dh_installdocs -i
+	dh_installexamples -i
+	dh_install -i
+	dh_python2 -i
+	dh_installman -i
+	dh_lintian -i
+	dh_link -i
+	dh_compress -i -X.pdf 
+	dh_fixperms -i
+	dh_installdeb -i
+	dh_shlibdeps -i
+	dh_gencontrol -i
+	dh_md5sums -i
+	dh_builddeb -i
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir -s
+	dh_testroot -s
+	dh_installdocs -s
+	dh_installexamples -s
+	dh_install -s
+	dh_installmenu -s
+	dh_python2 -s
+	dh_lintian -s
+	dh_installcron -s
+	dh_installinfo -s
+	dh_installchangelogs ChangeLog -s
+	dh_strip -s
+	dh_link -s
+	dh_compress -s \
+	    $(CURDIR)/debian/rtai-source/usr/src/kernel-patches/diffs/rtai/*
+	dh_fixperms -s
+	dh_makeshlibs -s
+	dh_installdeb -s
+	dh_shlibdeps -s
+	dh_gencontrol -s
+	dh_md5sums -s
+	dh_builddeb -s
+
+binary: binary-indep binary-arch
+
+
+# Prepares the package for distribution.  Intended for the kernel
+# maintainer.
+kdist: kdist_clean kdist_config kdist_image
+
+# The kdist_configure target is called by make-kpkg modules_config. It
+# should configure the module so it is ready for compilation (mostly
+# useful for calling configure)
+kdist_config: $(STAMPS_DIR)/kdist_config
+kdist_configure: $(STAMPS_DIR)/kdist_config
+
+$(STAMPS_DIR)/kdist_config: config.status
 ifeq ($(CONFIG_TARGET_IF),gui)
 	$(MAKE) -f makefile $(CONFIG_TARGET)
 endif
@@ -179,44 +353,6 @@ kdist_image:
 # other kdist_commands (except for the .deb files created).
 kdist_clean:
 	$(MAKE) $(MFLAGS) -f debian/rules clean
-
-### end  KERNEL SETUP
-
-ifeq ($(shell echo $(DEB_HOST_GNU_TYPE) | cut -d- -f1),powerpc)
-CONFIG_OPTION=CONFIG_PPC
-else ifeq ($(shell echo $(DEB_HOST_GNU_TYPE) | cut -d- -f1),arm)
-CONFIG_OPTION=CONFIG_ARM
-else ifeq ($(shell echo $(DEB_HOST_GNU_TYPE) | cut -d- -f1),x86_64)
-CONFIG_OPTION=CONFIG_X86_64
-else
-CONFIG_OPTION=CONFIG_X86_32
-endif
-
-config.status: $(STAMPS_DIR)/configure
-$(STAMPS_DIR)/configure:
-	dh_testdir
-	autoreconf -v --install
-	sed -e "s,^CONFIG_X86_X=,$(CONFIG_OPTION)=," debian/linux/.config.x86 > \
-		debian/linux/.config
-ifeq ($(CONFIG_OPTION),CONFIG_ARM)
-	echo "CONFIG_ARCH_PXA=y" >> debian/linux/.config
-endif
-	CFLAGS="$(CFLAGS)" ./configure --host=$(DEB_HOST_GNU_TYPE) \
-	       --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr \
-	       --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info \
-	       --with-linux-dir=$(CURDIR)/debian/linux --disable-leds \
-	       --includedir=\$${prefix}/include/rtai --disable-rtailab \
-	       --enable-comedi-lxrt --enable-comedi-lock --enable-fpu \
-	       --enable-rtdm --enable-doc --enable-dbx
-	touch $@
-
-build-arch:  config.status $(STAMPS_DIR)/build-arch
-$(STAMPS_DIR)/build-arch:  config.status
-	dh_testdir
-	cd base/sched/liblxrt && $(MAKE) CFLAGS="$(CFLAGS)"
-	cd base/scripts && $(MAKE)
-	$(MAKE) -C doc/doxygen
-	touch $@
 
 # the binary-modules target prepares the $(pmodules) package.
 # It is called by make-kpkg and *not* during a normal build
@@ -267,134 +403,8 @@ binary-modules: $(STAMPS_DIR)/kdist_config
 	${ROOT_CMD} dh_md5sums
 	${ROOT_CMD} dh_builddeb --destdir=$(KPKG_DEST_DIR)
 
-build-indep: config.status  $(STAMPS_DIR)/build-indep
-$(STAMPS_DIR)/build-indep:
-	dh_testdir
-	touch $@
 
-build: build-arch build-indep
 
-clean: config.status
-	dh_testdir
-	dh_testroot
 
-	rm -f $(STAMPS_DIR)/* \
-		debian/rtai-source.tar.bz2 \
-		debian/linux/.config
 
-	$(MAKE) distclean
-	dh_clean
-
-install: DH_OPTIONS=
-install: build
-	dh_testdir
-	dh_testroot
-	dh_prep
-	dh_installdirs
-	#(cd base/arch && ln -s mips mipsel ; ln -s ppc powerpc )
-
-	cd base/sched/liblxrt && $(MAKE) install DESTDIR=$(CURDIR)/debian/librtai-dev
-	mkdir -p $(CURDIR)/debian/librtai1/usr/lib
-	mv $(CURDIR)/debian/librtai-dev/usr/lib/liblxrt.so.* $(CURDIR)/debian/librtai1/usr/lib
-	cd base/include && $(MAKE) install DESTDIR=$(CURDIR)/debian/librtai-dev
-	cd rtai-py && $(MAKE) install pythondir=/usr/share/pyshared DESTDIR=$(CURDIR)/debian/python-rtai
-	chmod a-x $(CURDIR)/debian/python-rtai/usr/share/pyshared/*.py
-	dh_install -plibrtai-dev --sourcedir=. base/scripts/rtai-config usr/bin
-	cat base/ipc/shm/rtai_shm.udev base/ipc/shm/rtai_shm.udev > \
-	    debian/librtai-dev.udev
-	dh_installudev -plibrtai-dev
-
-	# Create the directories to install the source into
-	dh_installdirs -p$(psource)  usr/src/modules/$(package)
-	dh_installdirs -p$(psource)  usr/src/modules/$(package)/debian
-
-	# Copy only the driver source to the proper location
-	cp -a  \
-		aclocal.m4 \
-		ChangeLog \
-		bin/config.guess \
-		bin/config.sub \
-		configure \
-		configure.ac \
-		GNUmakefile.am \
-		GNUmakefile.in \
-		GNUmakefile \
-		README.INSTALL \
-		rtai_config.h.in \
-		addons \
-		base \
-		testsuite \
-		rtai-lab \
-		rtai-py \
-		debian/$(psource)/usr/src/modules/$(package)
-	# move the defconfig files for all architecture we support to template file name
-	mv debian/$(psource)/usr/src/modules/$(package)/base/arch/$(HOST_CPU)/defconfig \
-		debian/$(psource)/usr/src/modules/$(package)/base/arch/$(HOST_CPU)/defconfig.in
-#	# Copy the needed debian/ pieces to the proper location
-	cp debian/control.modules.in \
-	    debian/$(psource)/usr/src/modules/$(package)/debian/control.in
-	cp debian/rules debian/compat debian/changelog debian/copyright \
-	    debian/$(psource)/usr/src/modules/$(package)/debian
-	mkdir debian/$(psource)/usr/src/modules/$(package)/debian/stamps
-
-	tar cjf debian/rtai-source/usr/src/rtai-source.tar.bz2 --directory debian/$(psource)/usr/src modules
-	rm -rf debian/$(psource)/usr/src/modules
-
-	# Patch collection
-	find base/arch -name 'hal-linux-*.patch' | xargs -I XXX cp XXX debian/rtai-source/usr/src/kernel-patches/diffs/rtai/
-
-	# this one is also included in gcc-multilib (on some archs), see #707671
-	-rm -f $(CURDIR)/debian/librtai-dev/usr/include/asm
-
-#	# Install the RTAI isolcpus= grub.d entry
-	dh_install -plibrtai1 --sourcedir=debian/extras \
-	    --autodest etc/grub.d/09_rtai
-
-# Build architecture-independent files here.
-# Pass -i to all debhelper commands in this target to reduce clutter.
-binary-indep: build install
-	dh_testdir -i
-	dh_testroot -i
-	dh_installchangelogs ChangeLog -i
-	dh_installdocs -i
-	dh_installexamples -i
-	dh_install -i
-	dh_python2 -i
-	dh_installman -i
-	dh_lintian -i
-	dh_link -i
-	dh_compress -i -X.pdf 
-	dh_fixperms -i
-	dh_installdeb -i
-	dh_shlibdeps -i
-	dh_gencontrol -i
-	dh_md5sums -i
-	dh_builddeb -i
-
-# Build architecture-dependent files here.
-binary-arch: build install
-	dh_testdir -s
-	dh_testroot -s
-	dh_installdocs -s
-	dh_installexamples -s
-	dh_install -s
-	dh_installmenu -s
-	dh_python2 -s
-	dh_lintian -s
-	dh_installcron -s
-	dh_installinfo -s
-	dh_installchangelogs ChangeLog -s
-	dh_strip -s
-	dh_link -s
-	dh_compress -s \
-	    $(CURDIR)/debian/rtai-source/usr/src/kernel-patches/diffs/rtai/*
-	dh_fixperms -s
-	dh_makeshlibs -s
-	dh_installdeb -s
-	dh_shlibdeps -s
-	dh_gencontrol -s
-	dh_md5sums -s
-	dh_builddeb -s
-
-binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary install binary-modules kdist kdist_config kdist_image kdist_clean
