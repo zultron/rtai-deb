@@ -1,3 +1,9 @@
+rtai (4.0.3.4c052f40-1) unstable; urgency=low
+
+  * Update to shabbyx/rtai git rev 4c052f40
+
+ -- John Morris <john@zultron.com>  Sun, 14 Dec 2014 15:22:21 -0600
+
 rtai (4.0.2-1) unstable; urgency=low
 
   * Fix incorrect arch selection:  'x86', not 'x86_64'
