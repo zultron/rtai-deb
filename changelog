@@ -1,6 +1,8 @@
 rtai (4.0.4.5735b81-1) unstable; urgency=low
 
   * Update to shabbyx/rtai git rev 5735b81
+  * Remove pandoc reqs for OBS xUbuntu
+  * Fix Debian src package build
 
  -- John Morris <john@zultron.com>  Fri, 26 Dec 2014 13:45:03 -0600
 
