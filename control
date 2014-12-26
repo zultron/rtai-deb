@@ -11,7 +11,7 @@ Homepage: http://www.rtai.org/
 Standards-Version: 3.9.4
 
 Package: rtai
-Architecture: i386 amd64 powerpc powerpcspe arm armel armeb
+Architecture: i386 amd64
 Depends: rtai-doc (>= ${source:Version}), librtai1 (>= ${source:Version}), librtai-dev (>= ${source:Version}), rtai-source (>= ${source:Version}), python-rtai, ${misc:Depends}
 Description: Real Time Application Interface
  RTAI is a realtime extension with a broad variety of services which
@@ -28,7 +28,7 @@ Description: Real Time Application Interface
 
 Package: librtai1
 Section: libs
-Architecture: i386 amd64 powerpc powerpcspe arm armel armeb
+Architecture: i386 amd64
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Real Time Application Interface (module source)
  RTAI is a realtime extension with a broad variety of services which
@@ -44,7 +44,7 @@ Description: Real Time Application Interface (module source)
 
 Package: librtai-dev
 Section: libdevel
-Architecture: i386 amd64 powerpc powerpcspe arm armel armeb
+Architecture: i386 amd64
 Depends: librtai1 (= ${binary:Version}), ${misc:Depends}
 Description: Real Time Application Interface (module source)
  RTAI is a realtime extension with a broad variety of services which
@@ -61,7 +61,7 @@ Description: Real Time Application Interface (module source)
 
 Package: rtai-source
 Section: devel
-Architecture: i386 amd64 powerpc powerpcspe arm armel armeb
+Architecture: i386 amd64
 Depends: make, debhelper (>= 4.0.0), python-rtai, ${misc:Depends}
 Description: Real Time Application Interface (module source)
  RTAI is a realtime extension with a broad variety of services which
