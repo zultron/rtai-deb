@@ -202,7 +202,7 @@ $(STAMPS_DIR)/build-indep:
 
 build: build-arch build-indep
 
-clean: config.status
+clean:
 	dh_testdir
 	dh_testroot
 
@@ -210,7 +210,8 @@ clean: config.status
 		debian/rtai-source.tar.bz2 \
 		debian/linux/.config
 
-	$(MAKE) distclean
+	test ! -f config.status || \
+		$(MAKE) distclean
 	dh_clean
 
 install: DH_OPTIONS=
