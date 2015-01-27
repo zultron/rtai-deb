@@ -1,4 +1,4 @@
-# ignore build artifacts
+# ignore Debian build artifacts
 /files
 /*.debhelper.log
 /*.debhelper
@@ -12,6 +12,10 @@
 /rtai-source/
 /rtai/
 /stamps/[a-z]*
+
+# ignore fedpkg build artifacts
+/.build-*.log
+/rtai-*/
 
 # OSC
 /.osc/
