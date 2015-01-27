@@ -165,10 +165,14 @@ configure:
 	autoreconf -v --install
 
 debian/linux/.config:
+#	# Set up dummy linux source tree
 	dh_testdir
+	mkdir -p debian/linux/include/linux
+	cp debian/linux_dummy_Makefile debian/linux/Makefile
+	cp debian/linux_dummy_ipipe.h debian/linux/include/linux/ipipe.h
 #	# put CONFIG_X86_(32|64|ARM|PPC) into dummy .config
 	sed -e "s,^CONFIG_X86_X=,$(CONFIG_OPTION)=," \
-	    debian/linux/.config.x86 > debian/linux/.config
+	    debian/linux_dummy_.config > debian/linux/.config
 	test "$(CONFIG_OPTION)" != CONFIG_ARM || \
 	    echo "CONFIG_ARCH_PXA=y" >> debian/linux/.config
 
@@ -193,12 +197,12 @@ $(STAMPS_DIR)/build-arch:  config.status
 	$(MAKE) -C base/sched/liblxrt CFLAGS="$(CFLAGS)"
 	$(MAKE) -C base/scripts
 	$(MAKE) -C doc/doxygen
-	touch $@
+	mkdir -p $(dir $@) && touch $@
 
 build-indep: config.status  $(STAMPS_DIR)/build-indep
 $(STAMPS_DIR)/build-indep:
 	dh_testdir
-	touch $@
+	mkdir -p $(dir $@) && touch $@
 
 build: build-arch build-indep
 
@@ -206,7 +210,7 @@ clean:
 	dh_testdir
 	dh_testroot
 
-	rm -f $(STAMPS_DIR)/* \
+	rm -rf $(STAMPS_DIR) \
 		debian/rtai-source.tar.bz2 \
 		debian/linux/.config
 
@@ -235,8 +239,8 @@ install: build
 	    $(CURDIR)/debian/librtai1/usr/lib
 	$(MAKE) -C base/include install DESTDIR=$(CURDIR)/debian/librtai-dev
 #	# Install the RTAI isolcpus= grub.d entry
-	dh_install -plibrtai1 --sourcedir=debian/extras \
-	    --autodest etc/grub.d/09_rtai
+	cp debian/grub.d_rtai 09_rtai
+	dh_install -plibrtai1 09_rtai etc/grub.d
 
 #	# python-rtai
 	$(MAKE) -C rtai-py install pythondir=/usr/share/pyshared \
@@ -264,7 +268,6 @@ install: build
 	    $(pmoddir)/debian/control.in
 	cp debian/rules debian/compat debian/changelog debian/copyright \
 	    $(pmoddir)/debian
-	mkdir $(pmoddir)/debian/stamps
 #	# Build the rtai-source tarball
 	tar cjf debian/rtai-source/usr/src/rtai-source.tar.bz2 \
 	    --directory debian/$(psource)/usr/src modules
@@ -338,7 +341,7 @@ $(STAMPS_DIR)/kdist_config: config.status
 ifeq ($(CONFIG_TARGET_IF),gui)
 	$(MAKE) -f makefile $(CONFIG_TARGET)
 endif
-	touch $@
+	mkdir -p $(dir $@) && touch $@
 
 # the kdist_image target is called by make-kpkg modules_image. It is
 # responsible for compiling the module and creating the package. It

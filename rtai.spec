@@ -10,8 +10,10 @@ Url:		http://www.rtai.org
 
 
 Source0:	https://github.com/shabbyx/rtai/archive/rtai_%{version}.orig.tar.gz
-Source1:	rtai_config_x86_64
-Source2:	rtai_config_i686
+Source1:	linux_dummy_.config
+Source2:	linux_dummy_Makefile
+Source3:	linux_dummy_ipipe.h
+Source4:	grub.d_rtai
 
 BuildRequires:	python, bzip2, automake, autoconf, libtool
 BuildRequires:  doxygen, graphviz, comedilib-devel, libxml2, asciidoc, fop
@@ -64,7 +66,7 @@ CFLAGS+=" -DCONFIG_RTAI_LINUXDIR=${KSRC}"
 CFLAGS+=" -march=armv6"
 %endif
 
-# Set up a dummy kernel .config
+# Set up a dummy kernel source directory
 %ifarch armv7hl
 CONFIG_OPTION=CONFIG_ARM
 %endif
@@ -74,8 +76,11 @@ CONFIG_OPTION=CONFIG_X86_64
 %ifarch i686 i586
 CONFIG_OPTION=CONFIG_X86_32
 %endif
+mkdir -p $KSRC/include/linux
 sed -e "s,^CONFIG_X86_X=,${CONFIG_OPTION}=," \
-    $KSRC/.config.x86 > $KSRC/.config
+    %{SOURCE1} > $KSRC/.config
+cp %{SOURCE2} $KSRC/Makefile
+cp %{SOURCE3} $KSRC/include/linux/ipipe.h
 %ifnarch armv7hl
 echo "CONFIG_ARCH_PXA=y" >> $KSRC/.config
 %endif
@@ -106,8 +111,8 @@ cat base/ipc/shm/rtai_shm.udev base/ipc/shm/rtai_shm.udev > \
 mkdir -p %{buildroot}%{_bindir}
 install -m 755 base/scripts/rtai-config %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_sysconfdir}/grub.d
-install %{_sourcedir}/extras/etc/grub.d/09_rtai \
-    %{buildroot}%{_sysconfdir}/grub.d
+install %{SOURCE4} \
+    %{buildroot}%{_sysconfdir}/grub.d/09_rtai
 %{make_install} -C rtai-py pythondir=%{python_sitelib}
 chmod a-x %{buildroot}%{python_sitelib}/*.py
 %{make_install} -C base/include
