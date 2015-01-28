@@ -16,8 +16,11 @@ Source3:	linux_dummy_ipipe.h
 Source4:	grub.d_rtai
 
 BuildRequires:	python, bzip2, automake, autoconf, libtool
-BuildRequires:  doxygen, graphviz, comedilib-devel, libxml2, asciidoc, fop
+BuildRequires:  doxygen, graphviz, libxml2, asciidoc, fop
 BuildRequires:  docbook-dtds, libxslt
+%if ! 0%{?rhel}
+BuildRequires:  comedilib-devel
+%endif
 Requires:	kernel-rtai = %{version}
 ExclusiveArch:  i586 i686 x86_64
 
@@ -155,13 +158,14 @@ done
 * Tue Jan 27 2015 John Morris <john@zultron.com> - 4.0.4.5735b81-0
 - Update to ShabbyX fork
 - Bring in sync with Debian package
+- Do not BR: comedilib on RHEL
 
 * Sun Jun 16 2013 John Morris <john@zultron.com> - 3.9-2
-- Don't require specfile changes to rebuild against new kernel
+- Do not require specfile changes to rebuild against new kernel
 
 * Mon Jun  3 2013 John Morris <john@zultron.com> - 3.9-1
 - Requires: specific kernel version
-- Create udev entries; don't install device nodes
+- Create udev entries; do not install device nodes
 - Add new 32-bit options to .rtai_config
 - Simplify ./configure and make install commands
 - Build only for x86 arches
