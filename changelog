@@ -1,3 +1,9 @@
+rtai (4.0.5.a416758-1) unstable; urgency=low
+
+  * Update to shabbyx/rtai git rev a416758
+
+ -- John Morris <john@zultron.com>  Wed, 04 Mar 2015 15:20:42 -0600
+
 rtai (4.0.4.5735b81-1) unstable; urgency=low
 
   * Update to shabbyx/rtai git rev 5735b81
