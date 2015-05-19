@@ -1,3 +1,9 @@
+rtai (4.1-1) unstable; urgency=low
+
+  * ShabbyX/rtai merged with magma
+
+ -- John Morris <john@zultron.com>  Tue, 19 May 2015 13:35:45 -0500
+
 rtai (4.0.5.a416758-1) unstable; urgency=low
 
   * Update to shabbyx/rtai git rev a416758
