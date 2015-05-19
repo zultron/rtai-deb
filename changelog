@@ -1,6 +1,8 @@
 rtai (4.1-1) unstable; urgency=low
 
   * ShabbyX/rtai merged with magma
+  * Minor fixes:
+    - Explicitly disable comedi
 
  -- John Morris <john@zultron.com>  Tue, 19 May 2015 13:35:45 -0500
 

@@ -47,11 +47,15 @@ package		= rtai
 ifndef KSRC
 KSRC		= $(CURDIR)/debian/linux
 DUMMY_KCONFIG	= debian/linux/.config
-CONFIGURE_ARGS	= --enable-doc --enable-dbx
+# Comedi build is broken in magma
+# CONFIGURE_ARGS	= --enable-doc --enable-dbx \
+# 	--enable-comedi-lxrt --enable-comedi-lock
+CONFIGURE_ARGS	= --enable-doc --enable-dbx \
+	--disable-comedi-lxrt --disable-comedi-lock
 else
 # Comedi build is broken in magma
 #CONFIGURE_ARGS	= --enable-comedi-lxrt --enable-comedi-lock
-CONFIGURE_ARGS	= 
+CONFIGURE_ARGS	= --disable-comedi-lxrt --disable-comedi-lock
 endif
 # KDREV is the package-revision, as given to make-kpkg by the user.
 # Just put a simply default value in here which we use when we test
