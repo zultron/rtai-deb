@@ -264,7 +264,7 @@ install: build
 		ChangeLog README.INSTALL \
 		aclocal.m4 configure configure.ac bin \
 		GNUmakefile.am GNUmakefile.in GNUmakefile \
-		rtai_config.h.in \
+		Makefile rtai_config.h.in \
 		addons base testsuite rtai-lab rtai-py \
 		$(pmoddir)
 #	# Copy the needed debian/ pieces to the proper location
