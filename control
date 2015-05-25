@@ -12,7 +12,8 @@ Standards-Version: 3.9.4
 
 Package: rtai
 Architecture: i386 amd64
-Depends: rtai-doc (>= ${source:Version}), librtai1 (>= ${source:Version}), librtai-dev (>= ${source:Version}), rtai-source (>= ${source:Version}), python-rtai, ${misc:Depends}
+Suggests: rtai-doc (>= ${source:Version})
+Depends: librtai1 (>= ${source:Version}), python-rtai, ${misc:Depends}
 Description: Real Time Application Interface
  RTAI is a realtime extension with a broad variety of services which
  make realtime programmers' lifes easier. Some of them are
@@ -23,8 +24,7 @@ Description: Real Time Application Interface
   a mailbox implementation
   LXRT for hard real time in user space
  .
- This is a metapackage that depends on the latest versions of
- the individual RTAI packages.
+ This package contains RTAI runtime files.
 
 Package: librtai1
 Section: libs
@@ -45,6 +45,7 @@ Description: Real Time Application Interface (module source)
 Package: librtai-dev
 Section: libdevel
 Architecture: i386 amd64
+Suggests: rtai-source (>= ${source:Version})
 Depends: librtai1 (= ${binary:Version}), ${misc:Depends}
 Description: Real Time Application Interface (module source)
  RTAI is a realtime extension with a broad variety of services which
