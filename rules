@@ -219,7 +219,7 @@ clean:
 		debian/linux/.config
 
 	test ! -f config.status || \
-		$(MAKE) distclean
+		$(MAKE) -s distclean
 	dh_clean
 
 install: DH_OPTIONS=
