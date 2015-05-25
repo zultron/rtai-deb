@@ -199,6 +199,8 @@ build-arch: $(STAMPS_DIR)/build-arch
 $(STAMPS_DIR)/build-arch:  config.status
 	dh_testdir
 	$(MAKE) -C base/sched/liblxrt CFLAGS="$(CFLAGS)"
+	$(MAKE) -C base/arch/$(HOST_CPU)/calibration V=1 CFLAGS="$(CFLAGS)" \
+	    calibrate calibration_helper
 	$(MAKE) -C base/scripts
 	mkdir -p $(dir $@) && touch $@
 
@@ -228,6 +230,13 @@ install: build
 	dh_testroot
 	dh_prep
 	dh_installdirs
+
+#	# rtai package
+	cd base/arch/$(HOST_CPU)/calibration && \
+	    mv calibrate rtai_calibrate && \
+	    mv calibration_helper rtai_calibration_helper
+	dh_install -prtai --sourcedir=base/arch/$(HOST_CPU)/calibration \
+	    rtai_calibrate rtai_calibration_helper /usr/bin
 
 #	# librtai-dev
 	$(MAKE) -C base/sched/liblxrt install \
