@@ -200,12 +200,12 @@ $(STAMPS_DIR)/build-arch:  config.status
 	dh_testdir
 	$(MAKE) -C base/sched/liblxrt CFLAGS="$(CFLAGS)"
 	$(MAKE) -C base/scripts
-	$(MAKE) -C doc/doxygen
 	mkdir -p $(dir $@) && touch $@
 
 build-indep: config.status  $(STAMPS_DIR)/build-indep
 $(STAMPS_DIR)/build-indep:
 	dh_testdir
+	$(MAKE) -C doc/doxygen
 	mkdir -p $(dir $@) && touch $@
 
 build: build-arch build-indep
