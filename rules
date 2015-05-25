@@ -164,7 +164,7 @@ else
 CONFIG_OPTION=CONFIG_X86_32
 endif
 
-configure:
+configure: configure.ac
 	dh_testdir
 	autoreconf -v --install
 
