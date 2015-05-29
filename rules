@@ -204,8 +204,8 @@ $(STAMPS_DIR)/build-arch:  config.status
 	$(MAKE) -C base/scripts
 	mkdir -p $(dir $@) && touch $@
 
-build-indep: config.status  $(STAMPS_DIR)/build-indep
-$(STAMPS_DIR)/build-indep:
+build-indep:  $(STAMPS_DIR)/build-indep
+$(STAMPS_DIR)/build-indep: $(STAMPS_DIR)/build-arch
 	dh_testdir
 	$(MAKE) -C doc/doxygen
 	mkdir -p $(dir $@) && touch $@
