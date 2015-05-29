@@ -232,29 +232,30 @@ install: build
 	dh_installdirs
 
 #	# rtai package
+#	# - calibration tools
 	cd base/arch/$(HOST_CPU)/calibration && \
 	    mv calibrate rtai_calibrate && \
 	    mv calibration_helper rtai_calibration_helper
 	dh_install -prtai --sourcedir=base/arch/$(HOST_CPU)/calibration \
 	    rtai_calibrate rtai_calibration_helper /usr/bin
+#	# - rtai_shm udev
+	cat base/ipc/shm/rtai_shm.udev base/ipc/shm/rtai_shm.udev > \
+	    debian/rtai.udev
+	dh_installudev -prtai
+#	# - RTAI isolcpus= grub.d entry
+	cp debian/grub.d_rtai 09_rtai
+	dh_install -prtai 09_rtai etc/grub.d
 
 #	# librtai-dev
 	$(MAKE) -C base/sched/liblxrt install \
 	    DESTDIR=$(CURDIR)/debian/librtai-dev
 	dh_install -plibrtai-dev --sourcedir=. base/scripts/rtai-config usr/bin
-	cat base/ipc/shm/rtai_shm.udev base/ipc/shm/rtai_shm.udev > \
-	    debian/librtai-dev.udev
-	dh_installudev -plibrtai-dev
 
 #	# librtai1
 	mkdir -p $(CURDIR)/debian/librtai1/usr/lib
 	mv $(CURDIR)/debian/librtai-dev/usr/lib/liblxrt.so.* \
 	    $(CURDIR)/debian/librtai1/usr/lib
 	$(MAKE) -C base/include install DESTDIR=$(CURDIR)/debian/librtai-dev
-#	# Install the RTAI isolcpus= grub.d entry
-	cp debian/grub.d_rtai 09_rtai
-	dh_install -plibrtai1 09_rtai etc/grub.d
-
 #	# python-rtai
 	$(MAKE) -C rtai-py install pythondir=/usr/share/pyshared \
 	    DESTDIR=$(CURDIR)/debian/python-rtai
